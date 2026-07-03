@@ -33,7 +33,7 @@ class GoogleOAuthProvider(IOAuthProvider):
         Get the authorization URL for Google OAuth.
         """
 
-        redirect_uri = f"{config.APP_URL}/auth/oauth/callback/google"
+        redirect_uri = f"{config.APP_URL}/api/v1/auth/oauth/callback/google"
 
         return await self.client.authorize_redirect(request, redirect_uri)
 
