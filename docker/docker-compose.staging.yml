@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    extends:
+      file: docker-compose.base.yml
+      service: backend
+    container_name: chhoto_backend_staging
+    environment:
+      - ENVIRONMENT=staging
+      - DATABASE_URL=${STAGING_DATABASE_URL}
+      - REDIS_URL=${STAGING_REDIS_URL}
+      - SECRET_KEY=${STAGING_SECRET_KEY}
+    ports:
+      - "8000:8000"
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    extends:
+      file: docker-compose.base.yml
+      service: frontend
+    container_name: chhoto_frontend_staging
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=${STAGING_API_URL}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,6 +1,6 @@
 PROJECT_NAME ?= chhoto-backend
 TEST_PROJECT_NAME ?= $(PROJECT_NAME)-test
-TEST_COMPOSE_FILE ?= docker/docker-compose-test.yml
+TEST_COMPOSE_FILE ?= ../../docker/docker-compose-test.yml
 
 setup:
 	@echo "Setting up development environment with uv..."
@@ -49,15 +49,15 @@ downgrade:
 
 localup:
 	@echo "Starting the application with Docker Compose (Local environment)..."
-	PROJECT_NAME=$(PROJECT_NAME) docker compose -p $(PROJECT_NAME)-local -f docker/docker-compose.base.yml -f docker/docker-compose.local.yml up -d
+	PROJECT_NAME=$(PROJECT_NAME) docker compose -p $(PROJECT_NAME)-local -f ../../docker/docker-compose.base.yml -f ../../docker/docker-compose.dev.yml up -d
 
 localdown:
 	@echo "Stopping the application with Docker Compose..."
-	docker compose -p $(PROJECT_NAME)-local -f docker/docker-compose.base.yml -f docker/docker-compose.local.yml down
+	docker compose -p $(PROJECT_NAME)-local -f ../../docker/docker-compose.base.yml -f ../../docker/docker-compose.dev.yml down
 
 localdownv:
 	@echo "Stopping the application and removing volumes with Docker Compose..."
-	docker compose -p $(PROJECT_NAME)-local -f docker/docker-compose.base.yml -f docker/docker-compose.local.yml down -v
+	docker compose -p $(PROJECT_NAME)-local -f ../../docker/docker-compose.base.yml -f ../../docker/docker-compose.dev.yml down -v
 
 create-feature:
 	@echo "Creating a new feature context structure..."

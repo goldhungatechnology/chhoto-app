@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  backend:
+    extends:
+      file: docker-compose.base.yml
+      service: backend
+    container_name: chhoto_backend_prod
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=${PROD_DATABASE_URL}
+      - REDIS_URL=${PROD_REDIS_URL}
+      - SECRET_KEY=${PROD_SECRET_KEY}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  frontend:
+    extends:
+      file: docker-compose.base.yml
+      service: frontend
+    container_name: chhoto_frontend_prod
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=${PROD_API_URL}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"

@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Base Database definition
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - chhoto_network
+    restart: unless-stopped
+
+  # Base Cache definition
+  redis:
+    image: redis:7-alpine
+    networks:
+      - chhoto_network
+    restart: unless-stopped
+
+  # Base Backend App definition
+  backend:
+    build:
+      context: ../apps/backend
+      dockerfile: Dockerfile
+    networks:
+      - chhoto_network
+    restart: unless-stopped
+
+  # Base Frontend App definition
+  frontend:
+    build:
+      context: ../apps/frontend
+      dockerfile: Dockerfile
+    networks:
+      - chhoto_network
+    restart: unless-stopped
+
+networks:
+  chhoto_network:
+    name: chhoto_network
+    driver: bridge
