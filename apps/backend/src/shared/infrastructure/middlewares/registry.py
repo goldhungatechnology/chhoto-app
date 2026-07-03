@@ -14,13 +14,13 @@ from src.shared.infrastructure.middlewares.user_context_middleware import (
 
 def register_middlewares(app: FastAPI):
     """
-    Registers middlewares to the FastAPI app.
-    Execution order (bottom of stack is first, i.e., outer to inner):
+    register middlewares to the FastAPI app
+
+    Execution order (top = first to run):
         1. CORSMiddleware
-        2. SessionMiddleware
-        3. RequestContextMiddleware
-        4. AuthMiddleware
-        5. UserContextMiddleware
+        2. RequestContextMiddleware
+        3. AuthMiddleware
+        4. UserContextMiddleware
     """
     app.add_middleware(UserContextMiddleware)
     app.add_middleware(AuthMiddleware)
@@ -38,4 +38,3 @@ def register_middlewares(app: FastAPI):
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    # Register additional custom middlewares below

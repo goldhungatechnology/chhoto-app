@@ -5,7 +5,7 @@ from src.shared.infrastructure.logger import logger
 
 class DomainError(Exception):
     """
-    Custom base domain exception
+    Custom base domain  exception
     """
 
     code: str = "domain_error"
@@ -18,13 +18,20 @@ class DomainError(Exception):
     ):
         """Initialize with detail message and optional data."""
         super().__init__(error)
+        # Domain errors are expected control flow (404/409/validation/etc.) and
+        # are translated to proper HTTP responses by the global handler. Logging
+        # a full stack trace on construction floods logs and can leak internal
+        # details; record a concise debug line instead. Genuinely unhandled
+        # errors are still logged with a trace at the handler boundary.
         logger.debug("[%s] => %s", error, internal_details or "no internal details")
         self.error = error
         self.errors = errors
 
 
 class NotFoundError(DomainError):
-    """Custom Exception for not found"""
+    """
+    Custom Exception for not found
+    """
 
     code: str = "not_found"
 
@@ -34,11 +41,14 @@ class NotFoundError(DomainError):
         internal_details: Any | None = None,
         errors: Any | None = None,
     ):
+        """Initialize with detail message and optional data."""
         super().__init__(error=error, internal_details=internal_details, errors=errors)
 
 
 class ConflictError(DomainError):
-    """Exception for already exists"""
+    """
+    Exception for already exists
+    """
 
     code: str = "conflict_error"
 
@@ -48,11 +58,14 @@ class ConflictError(DomainError):
         internal_details: Any | None = None,
         errors: Any | None = None,
     ):
+        """Initialize with detail message and optional data."""
         super().__init__(error=error, internal_details=internal_details, errors=errors)
 
 
 class CreateError(DomainError):
-    """Exception for create error"""
+    """
+    Exception for create error
+    """
 
     code: str = "create_error"
 
@@ -62,11 +75,14 @@ class CreateError(DomainError):
         internal_details: Any | None = None,
         errors: Any | None = None,
     ):
+        """Initialize with detail message and optional data."""
         super().__init__(error=error, internal_details=internal_details, errors=errors)
 
 
 class UpdateError(DomainError):
-    """Exception for update error"""
+    """
+    Exception for update error
+    """
 
     code: str = "update_error"
 
@@ -76,11 +92,14 @@ class UpdateError(DomainError):
         internal_details: Any | None = None,
         errors: Any | None = None,
     ):
+        """Initialize with detail message and optional data."""
         super().__init__(error=error, internal_details=internal_details, errors=errors)
 
 
 class DeleteError(DomainError):
-    """Exception for delete error"""
+    """
+    Exception for delete error
+    """
 
     code: str = "delete_error"
 
@@ -90,11 +109,14 @@ class DeleteError(DomainError):
         internal_details: Any | None = None,
         errors: Any | None = None,
     ):
+        """Initialize with detail message and optional data."""
         super().__init__(error=error, internal_details=internal_details, errors=errors)
 
 
 class InvalidError(DomainError):
-    """Invalid error"""
+    """
+    Invalid error
+    """
 
     code: str = "invalid_error"
 
@@ -108,7 +130,9 @@ class InvalidError(DomainError):
 
 
 class UnAuthorizedError(DomainError):
-    """Unauthorized error"""
+    """
+    unauthorized error
+    """
 
     code: str = "unauthorized_error"
 
@@ -122,7 +146,9 @@ class UnAuthorizedError(DomainError):
 
 
 class ServerError(DomainError):
-    """Server error"""
+    """
+    Server error
+    """
 
     code: str = "server_error"
 

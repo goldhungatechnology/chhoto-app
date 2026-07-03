@@ -6,6 +6,7 @@ from json import dumps
 from pathlib import Path
 from typing import Any
 
+# Add custom log levels
 SUCCESS_LEVEL = 25
 logging.addLevelName(SUCCESS_LEVEL, "SUCCESS")
 

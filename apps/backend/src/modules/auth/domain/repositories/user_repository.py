@@ -1,25 +1,8 @@
-from abc import ABC, abstractmethod
-from typing import Any
-
-# TODO: Import UserEntity once implemented
+from src.modules.auth.domain.entities.user_entity import UserEntity
+from src.shared.domain.repository.base_repository_interface import IBaseRepository
 
 
-class IUserRepository(ABC):
+class IUserRepository(IBaseRepository[UserEntity]):
     """
-    Interface for user domain repository operations.
+    Interface for the User repository.
     """
-
-    @abstractmethod
-    async def get_by_id(self, user_id: Any) -> Any:
-        """Retrieve a user by ID."""
-        pass
-
-    @abstractmethod
-    async def get_by_email(self, email: str) -> Any:
-        """Retrieve a user by email."""
-        pass
-
-    @abstractmethod
-    async def save(self, user: Any) -> Any:
-        """Save/Update a user entity."""
-        pass

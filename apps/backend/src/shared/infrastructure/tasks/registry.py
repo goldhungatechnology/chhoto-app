@@ -1,4 +1,17 @@
-# Placeholder for background task workers (e.g. Dramatiq, Celery)
-# Register workers and tasks here as the backend grows.
+import importlib
 
-# TODO: Add outbox poller task and other notifications workers.
+from src.shared.mediator.discover import auto_discover_listeners
+
+# Load listeners so background tasks can dispatch events.
+auto_discover_listeners("src.modules")
+
+# Import background tasks so Dramatiq registers actors.
+importlib.import_module("src.modules.auth.application.tasks.user_created_email_task")
+importlib.import_module("src.modules.auth.application.tasks.forgot_password_email_task")
+importlib.import_module(
+    "src.modules.auth.application.tasks.resend_email_verification_task"
+)
+
+importlib.import_module(
+    "src.modules.workforce.application.tasks.default_role_and_member_role_task"
+)

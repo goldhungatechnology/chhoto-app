@@ -1,5 +1,5 @@
 class BaseUOW:
-    """Base Unit of Work class to manage database transactions."""
+    """Base Unit of Work class to manage transactions."""
 
     def __init__(self, session):
         self.session = session

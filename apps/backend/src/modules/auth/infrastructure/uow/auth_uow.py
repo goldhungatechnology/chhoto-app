@@ -1,6 +1,7 @@
+from src.shared.infrastructure.uow.base_uow import BaseUOW
 
-# TODO: Add specific auth repositories to this UOW, e.g.:
-# class AuthUOW(BaseUOW):
-#     def __init__(self, session):
-#         super().__init__(session)
-#         self.users = UserRepositoryImpl(session)
+
+class AuthUOW(BaseUOW):
+    """
+    Unit of Work for authentication-related operations.
+    """

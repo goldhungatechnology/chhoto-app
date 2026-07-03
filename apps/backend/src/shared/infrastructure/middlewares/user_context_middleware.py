@@ -1,20 +1,29 @@
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from src.shared.infrastructure.db import async_session
+from src.shared.infrastructure.middlewares.policy.policy_registry import get_user_reader
+
 
 class UserContextMiddleware(BaseHTTPMiddleware):
     """
-    Middleware for setting detailed user context in the request state.
-    TODO: Fetch the full user model using a user reader or cache and assign to request.state.user.
+    Middleware for setting user context in the request state
     """
 
+    def __init__(self, app):
+        super().__init__(app)
+
     async def dispatch(self, request, call_next):
+        """
+        1. Extract the user ID from the request state (set by the AuthMiddleware).
+        2. If a user ID is present, retrieve the user session data using the UserReader and set it in the request state for downstream handlers to access.
+        """
         user_id = getattr(request.state, "user_id", None)
         if user_id:
-            # TODO: Fetch user details from database or cache, e.g.:
-            # async with async_session() as db_session:
-            #     user = await get_user_reader(db_session).get_user(user_id)
-            # request.state.user = user
-            request.state.user = {"id": user_id, "role": "user"}  # Placeholder
+            # Fresh DB session per request; AsyncSession is not concurrency safe.
+            async with async_session() as db_session:
+                user_reader = get_user_reader(db_session)
+                user = await user_reader.get_user(user_id)
+            request.state.user = user
 
         response = await call_next(request)
         return response

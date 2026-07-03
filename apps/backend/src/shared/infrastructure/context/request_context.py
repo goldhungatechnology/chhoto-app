@@ -1,5 +1,10 @@
 """
 Request-scoped context propagated via ContextVars.
+
+Middleware populates these per request so cross-cutting concerns (e.g. the audit
+writer, which runs deep inside the persistence layer with no access to the
+`Request`) can attribute an action to the acting user and originating request
+without threading those values through every call.
 """
 
 from contextvars import ContextVar

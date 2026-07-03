@@ -40,6 +40,7 @@ async def global_exception_handler(request: Request, exc: Exception):
         for error in exc.errors():
             path = ".".join(str(p) for p in error["loc"] if p != "body")
             message = error["msg"]
+
             formatted[path] = message
 
         data = formatted
@@ -49,6 +50,8 @@ async def global_exception_handler(request: Request, exc: Exception):
         detail = getattr(exc, "error", str(exc))
         data = getattr(exc, "errors", None)
     else:
+        # Never expose raw exception/DB internals to the client. Log the real
+        # error server-side (with stack trace) and return a generic message.
         logger.exception(
             "Unhandled exception while processing %s %s",
             request.method,
@@ -57,7 +60,6 @@ async def global_exception_handler(request: Request, exc: Exception):
         status_code = HTTP_500_INTERNAL_SERVER_ERROR
         detail = "Internal server error"
         data = None
-
     return cr.error(status_code=status_code, error=detail, errors=data)
 
 

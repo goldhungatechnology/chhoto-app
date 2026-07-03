@@ -1,4 +1,4 @@
-from typing import Any, Literal, NotRequired, TypedDict
+from typing import TypedDict, NotRequired, Literal, Any
 
 from fastapi import Response, status
 from fastapi.encoders import jsonable_encoder
@@ -11,7 +11,7 @@ from src.core.config.settings import config
 
 class CustomSuccessResponseSchema[T](BaseModel):
     """
-    Custom Success Response Schema for all APIs
+    Custom Error Response Schema for every api
     """
 
     success: bool
@@ -21,7 +21,7 @@ class CustomSuccessResponseSchema[T](BaseModel):
 
 class CustomErrorResponseSchema[T](BaseModel):
     """
-    Custom Error Response Schema for all APIs
+    Custom Error Response Schema for every api
     """
 
     success: bool
@@ -31,7 +31,7 @@ class CustomErrorResponseSchema[T](BaseModel):
 
 class CustomResponse:
     """
-    Custom responses wrapper utility
+    list of customer Response methods
     """
 
     @staticmethod
@@ -41,7 +41,7 @@ class CustomResponse:
         status_code: int = status.HTTP_200_OK,
     ):
         """
-        On success, returns success=True with data and message
+        On sucess it returns the success=True with data and message
         """
         if status_code == HTTP_204_NO_CONTENT:
             return Response(status_code=status_code)
@@ -57,7 +57,7 @@ class CustomResponse:
         status_code: int | None = status.HTTP_400_BAD_REQUEST,
     ):
         """
-        On error, returns success=False and with error description and optional error details
+        On error it returns the success=False and with data and message
         """
         content = {"success": False, "error": error, "errors": jsonable_encoder(errors)}
         return JSONResponse(
@@ -67,7 +67,7 @@ class CustomResponse:
     @staticmethod
     def redirect(url: str, status_code: int = status.HTTP_302_FOUND):
         """
-        On redirect, returns RedirectResponse
+        On redirect it returns the success=True with data and message
         """
         return RedirectResponse(
             status_code=status_code,
@@ -80,7 +80,7 @@ SameSite = Literal["lax", "strict", "none"]
 
 class CookieOptions(TypedDict):
     """
-    CookieOptions schema configuration
+    CookieOptions is a TypedDict that defines the structure of the options for setting cookies in HTTP responses. It includes the following fields:
     """
 
     value: str
@@ -95,21 +95,28 @@ def get_cookie_response(
     response: JSONResponse | Response,
 ) -> JSONResponse | Response:
     """
-    Sets cookies in the response applying secure settings for production/staging environments
-    and development configurations for local testing.
+    custom cookie response handler that sets cookies in the response based on the provided options and environment configuration. It iterates through the cookies dictionary, applying different settings for local and production environments to ensure secure cookie handling in production while allowing more flexibility during local development.
     """
+
     for key, opts in cookies.items():
         value = opts["value"]
 
+        print("Cookie domain", config.COOKIE_DOMAIN)
+
+        # environment defaults
         if config.is_local or config.is_testing or config.is_development:
             response.set_cookie(
                 key=key,
                 value=value,
+                # Always HttpOnly so the session cookie is never readable from
+                # JS (XSS theft). `secure` stays optional in non-prod because
+                # local dev is served over plain http.
                 httponly=opts.get("httponly", True),
                 secure=opts.get("secure", False),
                 samesite=opts.get("samesite", "lax"),
                 max_age=opts.get("max_age"),
             )
+
         elif config.is_production or config.is_staging:
             response.set_cookie(
                 key=key,

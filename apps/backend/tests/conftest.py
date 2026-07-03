@@ -19,19 +19,18 @@ if not config.is_testing:
 async def setup_test_environment():
     """
     Fixture to set up the test environment before any tests run.
+    This could include initializing databases, loading test data, etc.
     """
+
     print("\nTest environment setup complete.\n")
-    # Point to the root alembic.ini
     alembic_cfg = Config(os.path.join(os.path.dirname(__file__), "../alembic.ini"))
     alembic_cfg.set_main_option(
         "sqlalchemy.url", str(config.DATABASE_URL.replace("asyncpg", "psycopg2"))
     )
-    # Automatically apply all migrations to the test database
     command.upgrade(alembic_cfg, "head")
 
     yield
 
-    # Clean up test database
     engine = create_async_engine(config.DATABASE_URL, future=True)
     async with engine.begin() as conn:
         await conn.run_sync(
@@ -44,6 +43,7 @@ async def setup_test_environment():
     from src.shared.infrastructure.db import async_engine as module_async_engine
 
     await module_async_engine.dispose()
+
     print("\nTest environment destroy complete.\n")
     await engine.dispose()
 
@@ -51,7 +51,7 @@ async def setup_test_environment():
 @pytest_asyncio.fixture(scope="function")
 async def test_engine(setup_test_environment):
     """
-    Function-scoped test engine setup.
+    test engine setup
     """
     engine = create_async_engine(config.DATABASE_URL, future=True)
     yield engine
@@ -61,7 +61,7 @@ async def test_engine(setup_test_environment):
 @pytest_asyncio.fixture(scope="function")
 async def db_session(test_engine):
     """
-    Yields an AsyncSession wrapper over a transaction rollback.
+    test db session setup
     """
     conn = await test_engine.connect()
     await conn.begin()
@@ -83,7 +83,7 @@ async def db_session(test_engine):
 @pytest_asyncio.fixture(scope="function")
 async def async_client(db_session):
     """
-    Yields an AsyncClient bound to the FastAPI instance with database override.
+    test async client setup
     """
     from src.main import create_app
     from src.shared.infrastructure.db import get_async_session
