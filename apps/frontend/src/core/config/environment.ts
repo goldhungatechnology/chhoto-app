@@ -1,0 +1,1 @@
+export const TURN_STILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;

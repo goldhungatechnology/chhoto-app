@@ -9,6 +9,7 @@ import { OAuthProviders } from "../primitives";
 import LoginFormFields from "./login-form-fields";
 
 import { useLoginForm } from "@/modules/auth/hooks";
+import { TURN_STILE_SITE_KEY } from "@/core/config";
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +43,7 @@ export default function LoginForm() {
           <LoginFormFields />
 
           <Turnstile
+            siteKey={TURN_STILE_SITE_KEY}
             onSuccess={(token) => setValue("captcha_token", token)}
             onExpire={() => setValue("captcha_token", "")}
           />
