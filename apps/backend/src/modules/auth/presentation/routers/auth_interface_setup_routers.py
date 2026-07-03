@@ -24,7 +24,7 @@ protected_router = APIRouter(
                 authenticated=True,
                 email_verified=True,
                 onboarded=True,
-                organization_member=True,
+                organization_member=False,
             )
         )
     ]

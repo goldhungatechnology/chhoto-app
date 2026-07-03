@@ -45,17 +45,8 @@ def create_app() -> FastAPI:
     return app
 
 
-def create_socket_app_factory():
-    """
-    Uvicorn factory to create the Socket.IO wrapped ASGI application.
-    """
-    from src.gateway.websocket.socket_manager import create_socket_app
-
-    return create_socket_app()
+app = create_app()
 
 
 if __name__ == "__main__":
-    from src.gateway.websocket.socket_manager import create_socket_app
-
-    socket_app = create_socket_app()
-    uvicorn.run(app=socket_app, factory=False, host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app="src.main:app", host="0.0.0.0", port=8000, reload=True)

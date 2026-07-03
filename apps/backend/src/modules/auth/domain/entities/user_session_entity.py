@@ -48,12 +48,6 @@ class UserSessionEntity(BaseEntity, AuditMixin):
         },
     )
 
-    organization_uuid: str | None = field(
-        default=None,
-        metadata={
-            "description": "The UUID of the organization associated with this session,this is not the source of truth for the organization, it's just for easier querying and filtering sessions by organization",
-        },
-    )
 
     @staticmethod
     def set_expiration() -> datetime:

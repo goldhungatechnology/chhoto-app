@@ -76,20 +76,12 @@ class VerifyMFAUseCase:
                     errors={"otp_code": "Invalid MFA code"},
                 )
 
-            latest_organization_uuid = payload.get("latest_organization_uuid")
-
             session_entity = UserSessionEntity(
                 user_id=user_id,
                 expires_at=UserSessionEntity.set_expiration(),
                 ip_address=ip_address,
                 device=device,
                 browser=browser,
-                organization_uuid=(
-                    str(latest_organization_uuid)
-                    if latest_organization_uuid
-                    and str(latest_organization_uuid) != "None"
-                    else None
-                ),
             )
 
             total_sessions = (

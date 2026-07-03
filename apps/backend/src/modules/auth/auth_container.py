@@ -103,9 +103,6 @@ from src.modules.auth.infrastructure.repositories.user_session_repository_impl i
 from src.modules.auth.infrastructure.repositories.user_token_repository_impl import (
     UserTokenRepositoryImpl,
 )
-from src.modules.organization.infrastructure.services.organization_reader_impl import (
-    get_organization_reader,
-)
 from src.shared.infrastructure.country.country_reader import get_country_reader
 from src.shared.infrastructure.geoip.geoip_service import (
     geoip_service as geoip_service_singleton,
@@ -124,8 +121,6 @@ class AuthContainer(containers.DeclarativeContainer):
 
     session = providers.Dependency(instance_of=AsyncSession)
 
-    ## ---------------------------- Other modules ports ----------------------------
-    organization_reader = providers.Factory(get_organization_reader, session=session)
     country_reader = providers.Factory(get_country_reader, session=session)
 
     ## ---------------------------- Shared singletons ----------------------------
@@ -203,7 +198,6 @@ class AuthContainer(containers.DeclarativeContainer):
         user_domain_service=user_domain_service,
         user_onboarding_domain_service=user_onboarding_domain_service,
         user_account_domain_service=user_account_domain_service,
-        organization_reader=organization_reader,
         user_session_domain_service=user_session_domain_service,
         cache_service=cache_service,
         country_reader=country_reader,
@@ -236,7 +230,6 @@ class AuthContainer(containers.DeclarativeContainer):
         user_account_domain_service=user_account_domain_service,
         hasher_service=hasher_service,
         token_service=token_service,
-        organization_reader=organization_reader,
     )
 
     logout_user_usecase = providers.Factory(

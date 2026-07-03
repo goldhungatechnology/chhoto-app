@@ -18,7 +18,6 @@ from src.modules.auth.presentation.schemas.auth_schemas import (
     CountryDetailsResponseSchema,
     EditProfileRequestSchema,
     LoginRequestSchema,
-    OrganizationDetailsResponseSchema,
     SignupRequestSchema,
     UserDetailsResponseSchema,
 )
@@ -166,21 +165,8 @@ async def me(request: Request, session: AsyncSessionDep):
                     "theme": onboarding_details.theme,
                 },
             },
-            "organizations": (
-                [
-                    OrganizationDetailsResponseSchema.model_validate(org).model_dump()
-                    for org in organizations
-                ]
-                if organizations
-                else None
-            ),
-            "current_organization": (
-                OrganizationDetailsResponseSchema.model_validate(
-                    last_organization
-                ).model_dump()
-                if last_organization
-                else None
-            ),
+            "organizations": None,
+            "current_organization": None,
             "security": {
                 "last_password_changed_at": (
                     user_account.last_password_updated_at if user_account else None

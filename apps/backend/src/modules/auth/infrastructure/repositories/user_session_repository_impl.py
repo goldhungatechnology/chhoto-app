@@ -37,7 +37,6 @@ class UserSessionRepositoryImpl(
             "ip_address": entity.ip_address,
             "browser": entity.browser,
             "revoked_at": entity.revoked_at,
-            "organization_uuid": entity.organization_uuid,
             "created_at": entity.created_at,
             "updated_at": entity.updated_at,
         }
@@ -55,7 +54,6 @@ class UserSessionRepositoryImpl(
             ip_address=row.get("ip_address"),
             browser=row.get("browser"),
             revoked_at=row.get("revoked_at"),
-            organization_uuid=row.get("organization_uuid"),
             created_at=row["created_at"],
             updated_at=row["updated_at"],
         )

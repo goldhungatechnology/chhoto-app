@@ -115,9 +115,6 @@ class Settings(BaseSettings):
     USER_SESSION_EXPIRE_MINUTES: int = 60 * 24 * 7
     MAX_AUTH_CONCURRENT_SESSIONS: int = 5
 
-    ## ---- WebSocket Gateway
-    SID_TRACKING_TTL: int = 300
-
     ## ---- Password
     FORGOT_PASSWORD_TOKEN_EXPIRE_MINUTES: int = 60 * 24
 

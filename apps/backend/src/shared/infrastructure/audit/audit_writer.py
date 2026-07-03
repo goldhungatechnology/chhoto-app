@@ -83,17 +83,10 @@ async def write_audit_event(
     if not config.AUDIT_ENABLED:
         return
 
-    organization_id = _resolve_organization_id(
-        entity_table=entity_table,
-        entity_id=entity_id,
-        before_data=before_data,
-        after_data=after_data,
-    )
-
     sql = text(
         "INSERT INTO sys_audit_logs (uuid, action, entity_table, entity_id, "
-        "organization_id, before_data, after_data, actor_id, request_id, client_ip, client_country, client_city, user_agent) "
-        "VALUES (:uuid, :action, :entity_table, :entity_id, :organization_id, :before_data, :after_data, "
+        "before_data, after_data, actor_id, request_id, client_ip, client_country, client_city, user_agent) "
+        "VALUES (:uuid, :action, :entity_table, :entity_id, :before_data, :after_data, "
         ":actor_id, :request_id, :client_ip, :client_country, :client_city, :user_agent)"
     )
 
@@ -102,7 +95,6 @@ async def write_audit_event(
         "action": action,
         "entity_table": entity_table,
         "entity_id": entity_id,
-        "organization_id": organization_id,
         "before_data": (
             json.dumps(sanitize_payload(before_data), ensure_ascii=True)
             if before_data is not None
@@ -148,24 +140,4 @@ async def write_audit_event(
             ) from e
 
 
-def _resolve_organization_id(
-    *,
-    entity_table: str,
-    entity_id: int | None,
-    before_data: dict[str, Any] | None,
-    after_data: dict[str, Any] | None,
-) -> int | None:
-    """
-    Resolve organization scope from known data shapes.
-    """
-    for data in (after_data, before_data):
-        if not data:
-            continue
-        org_id = data.get("organization_id")
-        if isinstance(org_id, int):
-            return org_id
 
-    if entity_table == "org_organizations" and isinstance(entity_id, int):
-        return entity_id
-
-    return None

@@ -10,9 +10,6 @@ from src.shared.infrastructure.model.base_model import BaseModel
 class UserSessionModel(BaseModel, AuditMixinModel):
     """
     sqlalchemy model representing the User entity in the database.
-
-    Organization uuid is only for support and presever organization context for better ux so it is not a relationship
-    rather a string
     """
 
     __tablename__ = "sys_auth_user_sessions"
@@ -34,7 +31,4 @@ class UserSessionModel(BaseModel, AuditMixinModel):
     )
     revoked_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True, default=None
-    )
-    organization_uuid: Mapped[str | None] = mapped_column(
-        String(255), nullable=True, default=None
     )

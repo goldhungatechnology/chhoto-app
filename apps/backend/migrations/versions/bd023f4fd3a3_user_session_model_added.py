@@ -35,7 +35,6 @@ class UserSessionMigration(BaseMigration):
         self.string("device", nullable=True, default=None)
         self.string("browser", nullable=True, default=None)
         self.date_time("revoked_at", nullable=True, default=None)
-        self.string("organization_uuid", nullable=True, default=None)
 
 
 def upgrade() -> None:

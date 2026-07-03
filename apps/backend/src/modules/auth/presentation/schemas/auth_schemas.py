@@ -27,17 +27,7 @@ class LoginRequestSchema(BaseSchema):
     )
 
 
-class OrganizationDetailsResponseSchema(BaseSchema):
-    """
-    response schema to validate the payload
-    """
 
-    uuid: str
-    name: str
-    slug: str
-    logo: str | None
-    status: str | None
-    model_config = {"from_attributes": True, "extra": "ignore"}
 
 
 class CountryDetailsResponseSchema(BaseSchema):

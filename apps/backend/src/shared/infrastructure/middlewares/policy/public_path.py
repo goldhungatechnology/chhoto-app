@@ -15,8 +15,6 @@ AUTH: list[str] = [
 
 COUNTRY: list[str] = ["/api/v1/countries"]
 
-VISITORS: list[str] = ["/api/v1/visitors/sessions/"]
-
 
 DUMMY: dict[str, list[str]] = {
     "/api/v1/dummy/dummy/": ["GET"],
@@ -31,7 +29,6 @@ PUBLIC_PATHS_METHODS: dict[str, list[str] | None] = {
     **dict.fromkeys(AUTH),
     **dict.fromkeys(OPENAPI),
     **dict.fromkeys(COUNTRY),
-    **dict.fromkeys(VISITORS),
     **dict.fromkeys(SYSTEM),
     **DUMMY,
 }

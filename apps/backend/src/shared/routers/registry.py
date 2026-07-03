@@ -8,25 +8,9 @@ from src.core.utils.response import (
     CustomSuccessResponseSchema,
 )
 from src.core.utils.response import CustomResponse as cr
-from src.modules.audit.presentation.routers.audit_routers_registry import (
-    router as audit_router,
-)
-
 ## Modules routers ##
 from src.modules.auth.presentation.routers.auth_routers_registry import (
     router as auth_router,
-)
-from src.modules.organization.presentation.routers.organization_routers_registry import (
-    router as organization_router,
-)
-from src.modules.visitor.presentation.routers.visitor_routers_registry import (
-    router as visitor_router,
-)
-from src.modules.workforce.presentation.routers.workforce_routers_registry import (
-    router as workforce_router,
-)
-from src.modules.motivation.presentation.routers.motivation_routers_registry import (
-    router as motivation_router,
 )
 
 from src.shared.infrastructure.background_task_manager.routers import (
@@ -85,11 +69,6 @@ def register_routers(app: FastAPI):
     """
 
     main_router.include_router(auth_router, prefix="/auth")
-    main_router.include_router(organization_router, prefix="/organizations")
-    main_router.include_router(motivation_router, prefix="/motivation")
-    main_router.include_router(audit_router, prefix="/audit")
-    main_router.include_router(workforce_router, prefix="/workforce")
-    main_router.include_router(visitor_router, prefix="/visitors")
     main_router.include_router(background_task_router)
     main_router.include_router(country_router, prefix="/countries")
     
