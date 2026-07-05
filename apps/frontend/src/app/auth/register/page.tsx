@@ -3,7 +3,7 @@ import { RegisterView } from "@/modules/auth/views";
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "Register",
+  title: "Register an account",
 };
 
 // ----------------------------------------------------------------------

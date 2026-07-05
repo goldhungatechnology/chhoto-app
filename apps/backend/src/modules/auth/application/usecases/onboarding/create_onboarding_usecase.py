@@ -40,7 +40,7 @@ class CreateOnboardingUseCase:
         )
 
         updated_user = await self.user_domain_service.mark_onboarded(
-            user_id=user_id
+            user_id=user_id, full_name=payload.full_name
         )
 
         for event in created_onboarding.pull_events():

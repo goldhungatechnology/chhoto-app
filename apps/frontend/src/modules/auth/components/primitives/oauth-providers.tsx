@@ -2,6 +2,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Button } from "@/shared/components/ui/button";
 
 import { API_BASE_URL } from "@/core/config/api";
+import Google from "../../../../../public/assets/icons/google";
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +19,7 @@ export default function OAuthProviders() {
         className="h-11 w-full rounded-full border-slate-200 bg-white text-slate-900 shadow-none hover:bg-slate-50"
         onClick={handleGoogleLogin}
       >
+        <Google />
         Continue with Google
       </Button>
 

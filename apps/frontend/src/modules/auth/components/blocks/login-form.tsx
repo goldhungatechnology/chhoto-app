@@ -50,7 +50,7 @@ export default function LoginForm() {
 
           <Button
             type="submit"
-            className="h-11 w-full rounded-full bg-slate-900 text-[15px] font-semibold text-white shadow-none hover:bg-slate-800"
+            className="h-11 w-full rounded-full bg-primary text-[15px] font-semibold text-white shadow-none hover:bg-primary-hover"
             disabled={isSubmitting || !turnstileToken}
           >
             {isSubmitting ? "Logging in..." : "Continue"}
@@ -60,7 +60,7 @@ export default function LoginForm() {
             Don&apos;t have an account?{" "}
             <Link
               href={ROUTES.AUTH.REGISTER}
-              className="font-medium text-slate-900 underline-offset-4 hover:underline"
+              className="font-medium text-primary underline-offset-4 hover:underline"
             >
               Register
             </Link>

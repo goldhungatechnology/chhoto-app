@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { FormProvider, useWatch } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import Link from "next/link";
 import { Turnstile } from "nextjs-turnstile";
 
@@ -16,32 +15,16 @@ import { useRegisterForm } from "@/modules/auth/hooks";
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
-  const { methods, onSubmit } = useRegisterForm();
-  const [showPassword, setShowPassword] = useState(false);
-
   const {
-    formState: { isSubmitting },
-    trigger,
-    setFocus,
-    setValue,
-    watch,
-    control,
-  } = methods;
-
-  const turnstileToken = useWatch({ control, name: "cf_turnstile_response" });
-
-  console.log("Turnstile token:", turnstileToken);
-
-  const handleContinue = async () => {
-    const isEmailValid = await trigger("email");
-
-    if (!isEmailValid) {
-      return;
-    }
-
-    setShowPassword(true);
-    setFocus("password");
-  };
+    methods,
+    onSubmit,
+    showPassword,
+    handleContinue,
+    isSubmitting,
+    turnstileToken,
+    onCaptchaSuccess,
+    onCaptchaExpire,
+  } = useRegisterForm();
 
   return (
     <>
@@ -54,14 +37,14 @@ export default function RegisterForm() {
           <RegisterFormFields showPassword={showPassword} />
 
           <Turnstile
-            onSuccess={(token) => setValue("cf_turnstile_response", token)}
-            onExpire={() => setValue("cf_turnstile_response", "")}
+            onSuccess={onCaptchaSuccess}
+            onExpire={onCaptchaExpire}
           />
 
           <Button
             type={showPassword ? "submit" : "button"}
             onClick={showPassword ? undefined : handleContinue}
-            className="h-11 w-full rounded-full bg-slate-900 text-[15px] font-semibold text-white shadow-none hover:bg-slate-800"
+            className="h-11 w-full rounded-full bg-primary text-[15px] font-semibold text-white shadow-none hover:bg-primary-hover"
             disabled={isSubmitting || (showPassword && !turnstileToken)}
           >
             {isSubmitting
@@ -75,7 +58,7 @@ export default function RegisterForm() {
             Already have an account?{" "}
             <Link
               href={ROUTES.AUTH.LOGIN}
-              className="font-medium text-slate-900 underline-offset-4 hover:underline"
+              className="font-medium text-primary underline-offset-4 hover:underline"
             >
               Login
             </Link>

@@ -1,6 +1,12 @@
 "use client";
 
-import { useForm, UseFormReturn, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
+import {
+  useForm,
+  UseFormReturn,
+  SubmitHandler,
+  useWatch,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
@@ -60,12 +66,19 @@ function deriveNameParts(email: string) {
 interface UseRegisterFormReturn {
   methods: UseFormReturn<RegisterFormValues>;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  showPassword: boolean;
+  handleContinue: () => Promise<void>;
+  isSubmitting: boolean;
+  turnstileToken: string;
+  onCaptchaSuccess: (token: string) => void;
+  onCaptchaExpire: () => void;
 }
 
 // ----------------------------------------------------------------------
 
 export function useRegisterForm(): UseRegisterFormReturn {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(true);
 
   const { registerAsync } = useRegister();
 
@@ -74,7 +87,29 @@ export function useRegisterForm(): UseRegisterFormReturn {
     defaultValues,
   });
 
-  const { reset, handleSubmit, setError } = methods;
+  const {
+    reset,
+    handleSubmit,
+    setError,
+    trigger,
+    setFocus,
+    setValue,
+    control,
+  } = methods;
+
+  const turnstileToken =
+    useWatch({ control, name: "cf_turnstile_response" }) || "";
+
+  const handleContinue = async () => {
+    const isEmailValid = await trigger("email");
+
+    if (!isEmailValid) {
+      return;
+    }
+
+    setShowPassword(true);
+    setFocus("password");
+  };
 
   const onSubmitHandler: SubmitHandler<RegisterFormValues> = async (
     data: RegisterFormValues,
@@ -111,7 +146,14 @@ export function useRegisterForm(): UseRegisterFormReturn {
   };
 
   return {
-    methods: methods,
+    methods,
     onSubmit: handleSubmit(onSubmitHandler),
+    showPassword,
+    handleContinue,
+    isSubmitting: methods.formState.isSubmitting,
+    turnstileToken,
+    onCaptchaSuccess: (token: string) =>
+      setValue("cf_turnstile_response", token),
+    onCaptchaExpire: () => setValue("cf_turnstile_response", ""),
   };
 }

@@ -34,6 +34,7 @@ async def test_execute_onboarding_success(create_onboarding_usecase):
     )
 
     payload = OnboardingRequestSchema(
+        full_name="John Doe",
         theme="light",
         referral_source="friend referral",
     )
@@ -82,7 +83,7 @@ async def test_execute_onboarding_success(create_onboarding_usecase):
 
     create_onboarding_usecase.user_onboarding_domain_service.create_user_onboarding.assert_awaited_once()
     create_onboarding_usecase.user_domain_service.mark_onboarded.assert_awaited_once_with(
-        user_id=42
+        user_id=42, full_name="John Doe"
     )
 
     assert mock_mediator.publish.await_count == 2

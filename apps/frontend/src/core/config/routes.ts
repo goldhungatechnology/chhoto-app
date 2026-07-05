@@ -1,14 +1,14 @@
 export const ROUTES = {
   AUTH: {
-    LOGIN: "/login",
-    REGISTER: "/register",
-    FORGOT_PASSWORD: "/forgot-password",
-    RESET_PASSWORD: "/reset-password",
-    VERIFY: "/verify",
+    LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
+    FORGOT_PASSWORD: "/auth/forgot-password",
+    RESET_PASSWORD: "/auth/reset-password",
+    VERIFY: "/auth/verify",
   },
 
   ONBOARDING: {
-    ROOT: "/onboarding",
+    ROOT: "/auth/onboarding",
   },
 
   DASHBOARD: {

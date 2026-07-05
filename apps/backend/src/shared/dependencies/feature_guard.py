@@ -5,7 +5,6 @@ from typing import Any, Awaitable, Callable
 from fastapi import Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.shared.exceptions.base_exceptions import ForbiddenError
 from src.shared.infrastructure.db import get_async_session
 
 
