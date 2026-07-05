@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   db_dev:
     extends:
       file: docker-compose.base.yml
       service: db
     container_name: chhoto_db_dev
-    environment:
-      - POSTGRES_DB=chhoto_db_dev
+    env_file:
+      - ../apps/backend/env/.env.development
     ports:
       - "5432:5432"
     volumes:
@@ -18,6 +16,8 @@ services:
       file: docker-compose.base.yml
       service: redis
     container_name: chhoto_redis_dev
+    env_file:
+      - ../apps/backend/env/.env.development
     ports:
       - "6379:6379"
     volumes:
@@ -28,11 +28,10 @@ services:
       file: docker-compose.base.yml
       service: backend
     container_name: chhoto_backend_dev
+    env_file:
+      - ../apps/backend/env/.env.development
     environment:
       - ENVIRONMENT=development
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db_dev:5432/chhoto_db_dev
-      - REDIS_URL=redis://redis_dev:6379/0
-      - AUDIT_ENABLED=True
     ports:
       - "8000:8000"
     volumes:
@@ -47,6 +46,8 @@ services:
       file: docker-compose.base.yml
       service: frontend
     container_name: chhoto_frontend_dev
+    env_file:
+      - ../apps/frontend/.env.local
     environment:
       - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://localhost:8000

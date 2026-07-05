@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ResetPasswordView } from "@/modules/auth/views";
 
 // ----------------------------------------------------------------------
@@ -9,5 +10,9 @@ export const metadata = {
 // ----------------------------------------------------------------------
 
 export default function Page() {
-  return <ResetPasswordView />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordView />
+    </Suspense>
+  );
 }

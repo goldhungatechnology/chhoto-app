@@ -18,7 +18,7 @@ export interface LoginResponse {
 export interface RegisterRequest {
   email: string;
   password: string;
-  username: string;
+  username?: string;
   captcha_token: string;
 }
 

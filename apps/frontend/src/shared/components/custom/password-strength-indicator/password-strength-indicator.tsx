@@ -1,5 +1,6 @@
 import { usePasswordStrength } from "@/shared/hooks/use-password-strength";
 import { cn } from "@/shared/lib/utils";
+import { type PasswordStrengthResult } from "@/shared/lib/password-strength";
 
 const strengthColors: Record<string, string> = {
   weak: "bg-red-500",
@@ -41,18 +42,33 @@ function Requirements({ requirements }: { requirements: Array<{ label: string; m
   );
 }
 
-export default function PasswordStrengthIndicator() {
-  const result = usePasswordStrength();
+interface PasswordStrengthIndicatorProps {
+  result?: PasswordStrengthResult | null;
+}
+
+export default function PasswordStrengthIndicator({ result: propResult }: PasswordStrengthIndicatorProps = {}) {
+  const hookResult = usePasswordStrength();
+  const result = propResult !== undefined ? propResult : hookResult;
+
+  const requirements = result
+    ? [
+        { label: "At least 8 characters", met: result.hasMinLength },
+        { label: "At least one uppercase letter", met: result.hasUpperCase },
+        { label: "At least one lowercase letter", met: result.hasLowerCase },
+        { label: "At least one number", met: result.hasNumber },
+        { label: "At least one special character", met: result.hasSpecialChar },
+      ]
+    : [];
 
   return (
     <div className="flex flex-col gap-2">
       {result && (
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium capitalize">{result.label}</span>
+          <span className="text-xs font-medium capitalize">{result.strength} password</span>
         </div>
       )}
       <StrengthBar strength={result?.strength ?? null} />
-      {result && <Requirements requirements={result.requirements} />}
+      {result && <Requirements requirements={requirements} />}
     </div>
   );
 }

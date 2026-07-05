@@ -29,6 +29,7 @@ environment = os.getenv("ENVIRONMENT", "development").lower()
 env_file_path = {
     "local": "env/.env.local",
     "development": "env/.env.development",
+    "staging": "env/.env.staging",
     "production": "env/.env.production",
     "testing": "env/.env.test",
 }

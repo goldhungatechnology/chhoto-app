@@ -1,11 +1,11 @@
-version: '3.8'
-
 services:
   backend:
     extends:
       file: docker-compose.base.yml
       service: backend
     container_name: chhoto_backend_prod
+    env_file:
+      - ../apps/backend/env/.env.production
     environment:
       - ENVIRONMENT=production
       - DATABASE_URL=${PROD_DATABASE_URL}

@@ -1,11 +1,11 @@
-version: '3.8'
-
 services:
   backend:
     extends:
       file: docker-compose.base.yml
       service: backend
     container_name: chhoto_backend_staging
+    env_file:
+      - ../apps/backend/env/.env.staging
     environment:
       - ENVIRONMENT=staging
       - DATABASE_URL=${STAGING_DATABASE_URL}
