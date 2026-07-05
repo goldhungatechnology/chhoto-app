@@ -7,7 +7,7 @@ export default function VerifyFooter() {
           href="mailto:support@example.com"
           className="text-slate-700 hover:text-slate-900 underline transition-colors"
         >
-          support@ping8.com
+          support@chhoto.tech
         </a>
       </p>
     </footer>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { useForm, UseFormReturn, SubmitHandler } from "react-hook-form";
+import { useForm, UseFormReturn, SubmitHandler, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
@@ -39,6 +39,10 @@ interface UseLoginFormReturn {
   methods: UseFormReturn<LoginFormValues>;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   turnstileRef: React.RefObject<TurnstileInstance | null>;
+  isSubmitting: boolean;
+  turnstileToken: string;
+  onCaptchaSuccess: (token: string) => void;
+  onCaptchaExpire: () => void;
 }
 
 // ----------------------------------------------------------------------
@@ -54,7 +58,9 @@ export function useLoginForm(): UseLoginFormReturn {
     defaultValues,
   });
 
-  const { reset, handleSubmit } = methods;
+  const { reset, handleSubmit, setValue, control } = methods;
+
+  const turnstileToken = useWatch({ control, name: "captcha_token" }) || "";
 
   const onSubmitHandler: SubmitHandler<LoginFormValues> = async (
     data: LoginFormValues,
@@ -75,14 +81,18 @@ export function useLoginForm(): UseLoginFormReturn {
 
       toast.error(errorMessage);
     } finally {
-      methods.setValue("captcha_token", "");
+      setValue("captcha_token", "");
       turnstileRef.current?.reset();
     }
   };
 
   return {
-    methods: methods,
+    methods,
     onSubmit: handleSubmit(onSubmitHandler),
     turnstileRef,
+    isSubmitting: methods.formState.isSubmitting,
+    turnstileToken,
+    onCaptchaSuccess: (token: string) => setValue("captcha_token", token),
+    onCaptchaExpire: () => setValue("captcha_token", ""),
   };
 }

@@ -35,7 +35,7 @@ export default function VerifyForm() {
 
   return (
     <div className="min-h-screen py-6 flex flex-col bg-gradient-to-br from-slate-50 via-white to-slate-50/50">
-      <header className="w-full px-4 sm:px-6">
+      <header className="w-full px-4 sm:px-6 flex justify-center">
         <Logo className="h-8" />
       </header>
 

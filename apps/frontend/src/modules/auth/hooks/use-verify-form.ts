@@ -84,8 +84,7 @@ export function useVerifyForm(): UseVerifyFormReturn {
 
     try {
       const payload = {
-        verification_token: code,
-        email: userEmail,
+        token: code,
       };
 
       await verifyAsync(payload);

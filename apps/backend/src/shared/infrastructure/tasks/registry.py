@@ -11,7 +11,3 @@ importlib.import_module("src.modules.auth.application.tasks.forgot_password_emai
 importlib.import_module(
     "src.modules.auth.application.tasks.resend_email_verification_task"
 )
-
-importlib.import_module(
-    "src.modules.workforce.application.tasks.default_role_and_member_role_task"
-)

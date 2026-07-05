@@ -14,15 +14,15 @@ import { TURN_STILE_SITE_KEY } from "@/core/config";
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-  const { methods, onSubmit, turnstileRef } = useLoginForm();
-
   const {
-    formState: { isSubmitting },
-    setValue,
-    watch,
-  } = methods;
-
-  const turnstileToken = watch("captcha_token");
+    methods,
+    onSubmit,
+    turnstileRef,
+    isSubmitting,
+    turnstileToken,
+    onCaptchaSuccess,
+    onCaptchaExpire,
+  } = useLoginForm();
 
   return (
     <>
@@ -46,8 +46,8 @@ export default function LoginForm() {
             ref={turnstileRef}
             siteKey={TURN_STILE_SITE_KEY || ""}
             options={{ size: "invisible" }}
-            onSuccess={(token) => setValue("captcha_token", token)}
-            onExpire={() => setValue("captcha_token", "")}
+            onSuccess={onCaptchaSuccess}
+            onExpire={onCaptchaExpire}
           />
 
           <Button
