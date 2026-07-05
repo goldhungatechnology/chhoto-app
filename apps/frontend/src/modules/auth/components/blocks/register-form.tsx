@@ -1,10 +1,10 @@
 import { FormProvider } from "react-hook-form";
 import Link from "next/link";
-import { Turnstile } from "nextjs-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 import { Button } from "@/shared/components/ui/button";
 
-import { ROUTES } from "@/core/config";
+import { ROUTES, TURN_STILE_SITE_KEY } from "@/core/config";
 
 import { OAuthProviders, RegisterFormHeader } from "../primitives";
 import RegisterFormFields from "./register-form-fields";
@@ -37,6 +37,8 @@ export default function RegisterForm() {
           <RegisterFormFields showPassword={showPassword} />
 
           <Turnstile
+            siteKey={TURN_STILE_SITE_KEY || ""}
+            options={{ size: "invisible" }}
             onSuccess={onCaptchaSuccess}
             onExpire={onCaptchaExpire}
           />

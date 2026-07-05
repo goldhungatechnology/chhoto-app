@@ -1,6 +1,6 @@
 import { FormProvider } from "react-hook-form";
 import Link from "next/link";
-import { Turnstile } from "nextjs-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 import { ROUTES } from "@/core/config";
 import { Button } from "@/shared/components/ui/button";
@@ -43,7 +43,8 @@ export default function LoginForm() {
           <LoginFormFields />
 
           <Turnstile
-            siteKey={TURN_STILE_SITE_KEY}
+            siteKey={TURN_STILE_SITE_KEY || ""}
+            options={{ size: "invisible" }}
             onSuccess={(token) => setValue("captcha_token", token)}
             onExpire={() => setValue("captcha_token", "")}
           />

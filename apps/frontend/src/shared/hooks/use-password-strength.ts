@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
 import {
@@ -25,18 +24,9 @@ export function usePasswordStrength(
 
   const password = useWatch({ control, name: fieldName });
 
-  const [strengthResult, setStrengthResult] =
-    useState<PasswordStrengthResult | null>(null);
+  if (!password || password.length === 0) {
+    return null;
+  }
 
-  useEffect(() => {
-    if (!password || password.length === 0) {
-      setStrengthResult(null);
-      return;
-    }
-
-    const result = evaluatePasswordStrength(password);
-    setStrengthResult(result);
-  }, [password]);
-
-  return strengthResult;
+  return evaluatePasswordStrength(password);
 }

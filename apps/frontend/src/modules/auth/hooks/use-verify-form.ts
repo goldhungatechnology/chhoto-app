@@ -47,6 +47,7 @@ export function useVerifyForm(): UseVerifyFormReturn {
       STORAGE_KEYS.PENDING_EMAIL,
     );
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUserEmail(storedEmail || "");
   }, []);
 

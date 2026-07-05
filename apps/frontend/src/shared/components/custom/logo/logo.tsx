@@ -1,28 +1,22 @@
 import Link from "next/link";
+import Image from "next/image";
 import { APP_NAME } from "@/core/config";
-import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
   titleClassName?: string;
 }
 
-export function Logo({ className, titleClassName }: LogoProps) {
+export function Logo({ className }: LogoProps) {
   return (
     <Link href="/" className={className}>
-      {/* <h1 */}
-      {/*   className={cn( */}
-      {/*     "text-xl font-semibold tracking-tight text-primary", */}
-      {/*     titleClassName, */}
-      {/*   )} */}
-      {/* > */}
-      {/*   {APP_NAME} */}
-      {/* </h1> */}
-      <img
+      <Image
         src="/assets/logo/chhoto-logo.png"
         alt={APP_NAME}
-        width="150px"
-        className="object-contain object-left"
+        width={150}
+        height={40}
+        priority
+        className="object-contain object-left w-auto h-auto"
       />
     </Link>
   );

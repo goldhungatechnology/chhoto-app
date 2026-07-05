@@ -17,7 +17,7 @@ export default function ForgotPasswordHeader({
         </h2>
 
         <p className="text-sm text-muted-foreground leading-relaxed">
-          If an account is associated with that address, you'll receive a reset
+          If an account is associated with that address, you&apos;ll receive a reset
           link within a few minutes.
         </p>
       </header>
@@ -29,7 +29,7 @@ export default function ForgotPasswordHeader({
       <h2 className="text-2xl font-semibold">Forgot password?</h2>
 
       <p className="text-sm text-muted-foreground leading-relaxed">
-        Enter your email and we'll send you a secure link to reset your
+        Enter your email and we&apos;ll send you a secure link to reset your
         password.
       </p>
     </header>

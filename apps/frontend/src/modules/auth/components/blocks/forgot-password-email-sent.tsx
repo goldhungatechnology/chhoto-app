@@ -39,7 +39,7 @@ export default function ForgotPasswordEmailSent({
         <p className="text-sm text-muted-foreground">
           We sent the link to{" "}
           <span className="font-medium text-foreground">{submittedEmail}</span>.
-          Be sure to check your spam folder if you don't see it.
+          Be sure to check your spam folder if you don&apos;t see it.
         </p>
       )}
 

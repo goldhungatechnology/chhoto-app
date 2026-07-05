@@ -1,0 +1,31 @@
+repos:
+  # Python
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.13.2
+    hooks:
+      - id: ruff-check
+      - id: ruff-format
+
+  # Generic
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+
+  # Frontend
+  - repo: local
+    hooks:
+      - id: frontend-eslint
+        name: Frontend ESLint
+        language: system
+        entry: bash -c "cd apps/frontend && pnpm lint"
+        pass_filenames: false
+
+      - id: frontend-types
+        name: Frontend Type Check
+        language: system
+        entry: bash -c "cd apps/frontend && pnpm typecheck"
+        pass_filenames: false

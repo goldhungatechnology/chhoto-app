@@ -4,14 +4,14 @@ import { Button } from "@/shared/components/ui/button";
 
 import { Field } from "@/shared/components/custom/form";
 
-import { type ForgotPasswordState } from "@/modules/auth/hooks";
+import { type ForgotPasswordState, type ForgotPasswordFormValues } from "@/modules/auth/hooks";
 
 import { ForgotPasswordHeader } from "../primitives";
 
 // ----------------------------------------------------------------------
 
 interface ForgotPasswordFormProps {
-  methods: UseFormReturn<any>;
+  methods: UseFormReturn<ForgotPasswordFormValues>;
   state: ForgotPasswordState;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
 }

@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 import { Logo } from "@/shared/components/custom/logo";
 
-import { AuthPrompt, InfoPanel } from "../primitives";
+import { InfoPanel } from "../primitives";
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ interface AuthPromptConfig {
 }
 
 interface LoginRegisterLayoutProps {
-  prompt: AuthPromptConfig;
+  prompt?: AuthPromptConfig;
   children: ReactNode;
   footerContent?: ReactNode;
 }
@@ -21,8 +21,8 @@ interface LoginRegisterLayoutProps {
 // ----------------------------------------------------------------------
 
 export default function LoginRegisterLayout({
-  prompt,
   children,
+  footerContent,
 }: LoginRegisterLayoutProps) {
   return (
     <div className="min-h-screen bg-white text-slate-900 md:grid md:grid-cols-2">
@@ -36,6 +36,8 @@ export default function LoginRegisterLayout({
         <div className="relative flex flex-1 items-center py-8 sm:py-10">
           <div className="mx-auto flex w-full max-w-[400px] flex-col gap-7 text-center">
             <div className="space-y-7">{children}</div>
+
+            {footerContent}
 
             <div className="w-full space-y-4 pt-2 text-center text-slate-500">
               <p className="text-sm text-slate-500">Trusted by teams at</p>

@@ -2,7 +2,7 @@ import { FormProvider, UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
 
-import { type ResetPasswordState } from "@/modules/auth/hooks";
+import { type ResetPasswordState, type ResetPasswordFormValues } from "@/modules/auth/hooks";
 
 import { ResetPasswordHeader } from "../primitives";
 import ResetPasswordFormFields from "./reset-password-form-fields";
@@ -10,7 +10,7 @@ import ResetPasswordFormFields from "./reset-password-form-fields";
 // ----------------------------------------------------------------------
 
 interface ResetPasswordFormProps {
-  methods: UseFormReturn<any>;
+  methods: UseFormReturn<ResetPasswordFormValues>;
   state: ResetPasswordState;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
 }

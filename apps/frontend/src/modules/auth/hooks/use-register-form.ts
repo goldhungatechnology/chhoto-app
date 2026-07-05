@@ -18,8 +18,6 @@ import { useRegister } from "@/modules/auth/api/hooks";
 
 import { toast } from "@/shared/components/custom/snackbar";
 
-import { evaluatePasswordStrength } from "@/shared/lib/password-strength";
-
 // ----------------------------------------------------------------------
 
 const Schema = z.object({
@@ -39,27 +37,6 @@ const defaultValues: RegisterFormValues = {
   password: "",
   cf_turnstile_response: "",
 };
-
-function deriveNameParts(email: string) {
-  const localPart = email.split("@")[0] ?? "";
-  const cleaned = localPart
-    .replace(/[._-]+/g, " ")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-
-  const capitalize = (value: string) =>
-    value ? `${value.charAt(0).toUpperCase()}${value.slice(1)}` : "User";
-
-  const fallback = localPart || "User";
-  const firstName = capitalize(cleaned[0] ?? fallback);
-  const lastName = capitalize(cleaned[1] ?? cleaned[0] ?? fallback);
-
-  return {
-    first_name: firstName,
-    last_name: lastName,
-  };
-}
 
 // ----------------------------------------------------------------------
 
