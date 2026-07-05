@@ -9,3 +9,5 @@ export { useVerify } from "./use-verify";
 export { useForgotPassword } from "./use-forgot-password";
 
 export { useResetPassword } from "./use-reset-password";
+
+export { useOnboardingSubmit } from "./use-onboarding-submit";

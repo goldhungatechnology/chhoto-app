@@ -11,3 +11,4 @@ export {
   type ResetPasswordFormValues,
   type ResetPasswordState,
 } from "./use-reset-password-form";
+export { useOnboarding, type UseOnboardingReturn } from "./use-onboarding";

@@ -1,6 +1,4 @@
-import { AxiosError, AxiosInstance } from "axios";
-
-import { ApiError } from "@/http/errors";
+import { AxiosInstance } from "axios";
 
 import instance from "./instance";
 

@@ -18,6 +18,9 @@ import type {
   //
   ResetPasswordRequest,
   ResetPasswordResponse,
+  //
+  OnboardingRequest,
+  OnboardingResponse,
 } from "./auth.types";
 
 import { ENDPOINTS } from "./endpoints";
@@ -61,6 +64,15 @@ export class AuthApi {
   ): Promise<ResetPasswordResponse> => {
     return this.client.post<ResetPasswordResponse>(
       ENDPOINTS.RESET_PASSWORD,
+      payload,
+    );
+  };
+
+  onboarding = (
+    payload: OnboardingRequest,
+  ): Promise<OnboardingResponse> => {
+    return this.client.post<OnboardingResponse>(
+      ENDPOINTS.ONBOARDING,
       payload,
     );
   };

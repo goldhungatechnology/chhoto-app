@@ -60,3 +60,14 @@ export interface ResetPasswordRequest {
 export interface ResetPasswordResponse {
   message: string;
 }
+
+export interface OnboardingRequest {
+  full_name: string;
+  theme: "light" | "dark";
+  referral_source: string;
+}
+
+export interface OnboardingResponse {
+  message: string;
+  data?: unknown;
+}

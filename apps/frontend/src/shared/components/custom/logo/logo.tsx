@@ -16,7 +16,7 @@ export function Logo({ className }: LogoProps) {
         width={150}
         height={40}
         priority
-        className="object-contain object-left w-auto h-auto"
+        className="object-contain object-left"
       />
     </Link>
   );
