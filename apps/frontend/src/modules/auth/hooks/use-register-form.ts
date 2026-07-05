@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   useForm,
   UseFormReturn,
@@ -10,6 +10,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { type TurnstileInstance } from "@marsidev/react-turnstile";
 
 import { ROUTES } from "@/core/config";
 import { localStorageAdapter, STORAGE_KEYS } from "@/core/local-storage";
@@ -49,6 +50,7 @@ interface UseRegisterFormReturn {
   turnstileToken: string;
   onCaptchaSuccess: (token: string) => void;
   onCaptchaExpire: () => void;
+  turnstileRef: React.RefObject<TurnstileInstance | null>;
 }
 
 // ----------------------------------------------------------------------
@@ -56,6 +58,7 @@ interface UseRegisterFormReturn {
 export function useRegisterForm(): UseRegisterFormReturn {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(true);
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
 
   const { registerAsync } = useRegister();
 
@@ -106,19 +109,33 @@ export function useRegisterForm(): UseRegisterFormReturn {
 
       reset();
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Registration failed. Please try again.";
-
-      if (errorMessage.startsWith("Email")) {
-        setError("email", {
-          type: "server",
-          message: errorMessage,
+      const apiError = error as { errors?: Record<string, unknown>; message?: string };
+      const errors = apiError?.errors;
+      if (errors) {
+        Object.entries(errors).forEach(([key, value]) => {
+          if (key === "captcha_token") {
+            toast.error(
+              "Security check failed. Please reload the page and try again.",
+            );
+          } else {
+            setError(key as keyof RegisterFormValues, {
+              type: "manual",
+              message: value as string,
+            });
+          }
         });
       } else {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : typeof error === "string"
+              ? error
+              : apiError?.message || "Registration failed. Please try again.";
         toast.error(errorMessage);
       }
+    } finally {
+      setValue("cf_turnstile_response", "");
+      turnstileRef.current?.reset();
     }
   };
 
@@ -132,5 +149,6 @@ export function useRegisterForm(): UseRegisterFormReturn {
     onCaptchaSuccess: (token: string) =>
       setValue("cf_turnstile_response", token),
     onCaptchaExpire: () => setValue("cf_turnstile_response", ""),
+    turnstileRef,
   };
 }

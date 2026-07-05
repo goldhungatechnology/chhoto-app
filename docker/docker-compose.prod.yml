@@ -26,6 +26,28 @@ services:
         max-size: "20m"
         max-file: "5"
 
+  background_worker:
+    extends:
+      file: docker-compose.base.yml
+      service: background_worker
+    container_name: chhoto_worker_prod
+    env_file:
+      - ../apps/backend/env/.env.production
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=${PROD_DATABASE_URL}
+      - REDIS_URL=${PROD_REDIS_URL}
+      - SECRET_KEY=${PROD_SECRET_KEY}
+    depends_on:
+      - backend
+    command: dramatiq src.shared.infrastructure.tasks.registry
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+
   frontend:
     extends:
       file: docker-compose.base.yml

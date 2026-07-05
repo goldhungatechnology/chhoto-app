@@ -25,6 +25,15 @@ services:
       - chhoto_network
     restart: unless-stopped
 
+  # Base Background Worker definition
+  background_worker:
+    build:
+      context: ../apps/backend
+      dockerfile: Dockerfile
+    networks:
+      - chhoto_network
+    restart: unless-stopped
+
   # Base Frontend App definition
   frontend:
     build:

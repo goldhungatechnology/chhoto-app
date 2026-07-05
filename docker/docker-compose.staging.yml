@@ -20,6 +20,28 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  background_worker:
+    extends:
+      file: docker-compose.base.yml
+      service: background_worker
+    container_name: chhoto_worker_staging
+    env_file:
+      - ../apps/backend/env/.env.staging
+    environment:
+      - ENVIRONMENT=staging
+      - DATABASE_URL=${STAGING_DATABASE_URL}
+      - REDIS_URL=${STAGING_REDIS_URL}
+      - SECRET_KEY=${STAGING_SECRET_KEY}
+    depends_on:
+      - backend
+    command: dramatiq src.shared.infrastructure.tasks.registry
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   frontend:
     extends:
       file: docker-compose.base.yml

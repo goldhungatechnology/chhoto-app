@@ -41,6 +41,22 @@ services:
       - redis_dev
     command: uvicorn src.main:create_app --host 0.0.0.0 --port 8000 --reload --factory
 
+  background_worker:
+    extends:
+      file: docker-compose.base.yml
+      service: background_worker
+    container_name: chhoto_worker_dev
+    env_file:
+      - ../apps/backend/env/.env.development
+    environment:
+      - ENVIRONMENT=development
+    volumes:
+      - ../apps/backend:/app
+    depends_on:
+      - db_dev
+      - redis_dev
+    command: dramatiq src.shared.infrastructure.tasks.registry
+
   frontend:
     extends:
       file: docker-compose.base.yml

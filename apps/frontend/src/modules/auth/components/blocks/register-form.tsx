@@ -24,6 +24,7 @@ export default function RegisterForm() {
     turnstileToken,
     onCaptchaSuccess,
     onCaptchaExpire,
+    turnstileRef,
   } = useRegisterForm();
 
   return (
@@ -37,6 +38,7 @@ export default function RegisterForm() {
           <RegisterFormFields showPassword={showPassword} />
 
           <Turnstile
+            ref={turnstileRef}
             siteKey={TURN_STILE_SITE_KEY || ""}
             options={{ size: "invisible" }}
             onSuccess={onCaptchaSuccess}

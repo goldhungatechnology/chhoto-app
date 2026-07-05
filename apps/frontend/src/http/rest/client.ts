@@ -26,7 +26,7 @@ export class Client {
       const response = await this.httpInstance.get<T>(url, config);
       return response.data;
     } catch (error) {
-      throw this.parseError("GET", url, error);
+      throw error;
     }
   }
 
@@ -39,7 +39,7 @@ export class Client {
       const response = await this.httpInstance.post<T>(url, data, config);
       return response.data;
     } catch (error) {
-      throw this.parseError("POST", url, error);
+      throw error;
     }
   }
 
@@ -52,7 +52,7 @@ export class Client {
       const response = await this.httpInstance.put<T>(url, data, config);
       return response.data;
     } catch (error) {
-      throw this.parseError("PUT", url, error);
+      throw error;
     }
   }
 
@@ -65,7 +65,7 @@ export class Client {
       const response = await this.httpInstance.patch<T>(url, data, config);
       return response.data;
     } catch (error) {
-      throw this.parseError("PATCH", url, error);
+      throw error;
     }
   }
 
@@ -74,35 +74,7 @@ export class Client {
       const response = await this.httpInstance.delete<T>(url, config);
       return response.data;
     } catch (error) {
-      throw this.parseError("DELETE", url, error);
+      throw error;
     }
-  }
-
-  private parseError(method: string, url: string, error: unknown): ApiError {
-    if (error instanceof AxiosError) {
-      const statusCode = error.response?.status ?? 500;
-
-      const message =
-        (error.response?.data as Record<string, unknown>)?.message ??
-        error.message ??
-        "Unknown error occurred";
-
-      const apiError = new ApiError(statusCode, method, url, String(message));
-
-      this.logError(apiError);
-
-      return apiError;
-    }
-
-    const apiError = new ApiError(500, method, url, "Unknown error occurred");
-    this.logError(apiError);
-
-    return apiError;
-  }
-
-  private logError(error: ApiError): void {
-    console.error("[API ERROR]", error.toJSON());
-
-    // For (Sentry, DataDog, etc.)
   }
 }

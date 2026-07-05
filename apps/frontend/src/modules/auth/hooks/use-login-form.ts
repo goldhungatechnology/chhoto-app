@@ -1,9 +1,11 @@
 "use client";
 
+import { useRef } from "react";
 import { useForm, UseFormReturn, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { type TurnstileInstance } from "@marsidev/react-turnstile";
 
 import { toast } from "@/shared/components/custom/snackbar";
 
@@ -36,12 +38,14 @@ const defaultValues: LoginFormValues = {
 interface UseLoginFormReturn {
   methods: UseFormReturn<LoginFormValues>;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  turnstileRef: React.RefObject<TurnstileInstance | null>;
 }
 
 // ----------------------------------------------------------------------
 
 export function useLoginForm(): UseLoginFormReturn {
   const router = useRouter();
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
 
   const { loginAsync } = useLogin();
 
@@ -70,11 +74,15 @@ export function useLoginForm(): UseLoginFormReturn {
           : "Login failed. Please check your credentials.";
 
       toast.error(errorMessage);
+    } finally {
+      methods.setValue("captcha_token", "");
+      turnstileRef.current?.reset();
     }
   };
 
   return {
     methods: methods,
     onSubmit: handleSubmit(onSubmitHandler),
+    turnstileRef,
   };
 }

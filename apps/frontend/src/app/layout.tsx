@@ -6,6 +6,7 @@ import { APP_NAME } from "@/core/config";
 import { cn } from "@/lib/utils";
 
 import { ServerStateProvider } from "@/core/server-state";
+import { Snackbar } from "@/shared/components/custom/snackbar";
 
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ServerStateProvider>{children}</ServerStateProvider>
+        <Snackbar />
       </body>
     </html>
   );

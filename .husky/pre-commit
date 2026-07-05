@@ -1,1 +1,0 @@
-cd apps/backend && ( .venv/bin/ruff check . || uv run ruff check . || ruff check . )
