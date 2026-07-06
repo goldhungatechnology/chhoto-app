@@ -74,11 +74,13 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
 
     ## ---------------------------------------------- Email & Notifications --------------------------------
+    EMAIL_PROVIDER: str = "smtp"
     SMTP_HOST: str = "smtp.example.com"
     SMTP_PORT: int = 2525
     SMTP_USERNAME: str = "your_smtp_username"
     SMTP_PASSWORD: str = "your_smtp_password"
     EMAIL_FROM: str = "noreply@example.com"
+    RESEND_API_KEY: str | None = None
 
     ## ---------------------------------------------- File Storage --------------------------------
 
