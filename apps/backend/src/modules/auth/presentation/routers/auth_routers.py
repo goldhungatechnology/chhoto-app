@@ -39,6 +39,19 @@ protected_router = APIRouter(
     ]
 )
 
+partially_protected_router = APIRouter(
+    dependencies=[
+        Depends(
+            require_access(
+                authenticated=True,
+                email_verified=False,
+                onboarded=False,
+                organization_member=False,
+            )
+        )
+    ]
+)
+
 logout_router = APIRouter(
     dependencies=[
         Depends(
@@ -124,7 +137,7 @@ async def login(request: Request, body: LoginRequestSchema, session: AsyncSessio
 ## ------------------------------------------------ Protected Endpoints ------------------------------------------------ ##
 
 
-@protected_router.get(
+@partially_protected_router.get(
     "/me", response_model=CustomSuccessResponseSchema[UserDetailsResponseSchema]
 )
 async def me(request: Request, session: AsyncSessionDep):
@@ -161,9 +174,14 @@ async def me(request: Request, session: AsyncSessionDep):
                     if country
                     else None
                 ),
-                "onboarding_details": {
-                    "theme": onboarding_details.theme,
-                },
+                "is_onboarded": True if onboarding_details else False,
+                "onboarding_details": (
+                    {
+                        "theme": onboarding_details.theme,
+                    }
+                    if onboarding_details
+                    else None
+                ),
             },
             "organizations": None,
             "current_organization": None,
@@ -230,5 +248,6 @@ async def logout(request: Request, session: AsyncSessionDep):
 
 ## ------------------------------------------------ Include Routers ------------------------------------------------ ##
 router.include_router(public_router)
+router.include_router(partially_protected_router)
 router.include_router(protected_router)
 router.include_router(logout_router)

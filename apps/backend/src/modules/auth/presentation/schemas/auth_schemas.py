@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import Field
 
-from src.shared.schemas import BaseSchema, DomainEmail, DomainString
+from src.shared.schemas import BaseSchema, DomainEmail, DomainString, computed_field
 
 
 class SignupRequestSchema(BaseSchema):
@@ -25,9 +25,6 @@ class LoginRequestSchema(BaseSchema):
     captcha_token: str | None = Field(
         ..., description="Captcha token from the frontend"
     )
-
-
-
 
 
 class CountryDetailsResponseSchema(BaseSchema):
@@ -63,6 +60,11 @@ class UserDetailsResponseSchema(BaseSchema):
     # organization: OrganizationDetailsResponseSchema
 
     model_config = {"from_attributes": True, "extra": "ignore"}
+
+    @computed_field
+    @property
+    def is_email_verified(self) -> bool:
+        return self.email_verified_at is not None
 
 
 class SignupResponseSchema(BaseSchema):

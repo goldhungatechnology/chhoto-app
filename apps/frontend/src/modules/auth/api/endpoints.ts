@@ -6,4 +6,5 @@ export const ENDPOINTS = {
   FORGOT_PASSWORD: "/auth/password/forgot",
   RESET_PASSWORD: "/auth/password/forgot/verify",
   ONBOARDING: "/auth/onboarding",
+  ME: "/auth/me",
 } as const;

@@ -11,3 +11,5 @@ export { useForgotPassword } from "./use-forgot-password";
 export { useResetPassword } from "./use-reset-password";
 
 export { useOnboardingSubmit } from "./use-onboarding-submit";
+
+export { useMe } from "./use-me";

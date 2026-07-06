@@ -58,7 +58,7 @@ class UserOnboardingDomainService:
         try:
             onboarding = await self.repository.get_by(user_id=user_id)
             if not onboarding:
-                raise DomainError("User onboarding not found for this user")
+                return None
             return onboarding
         except DomainError:
             raise

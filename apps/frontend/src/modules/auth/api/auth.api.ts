@@ -21,6 +21,8 @@ import type {
   //
   OnboardingRequest,
   OnboardingResponse,
+  //
+  MeResponse,
 } from "./auth.types";
 
 import { ENDPOINTS } from "./endpoints";
@@ -75,5 +77,9 @@ export class AuthApi {
       ENDPOINTS.ONBOARDING,
       payload,
     );
+  };
+
+  me = (): Promise<MeResponse> => {
+    return this.client.get<MeResponse>(ENDPOINTS.ME);
   };
 }

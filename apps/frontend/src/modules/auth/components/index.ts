@@ -4,3 +4,4 @@ export { default as ForgotPasswordSection } from "./sections/forgot-password-sec
 export { default as ResetPasswordSection } from "./sections/reset-password-section";
 export { default as VerifyForm } from "./sections/verify-form";
 export { default as OnboardingSection } from "./sections/onboarding-section";
+export { default as AuthGuard } from "./auth-guard";

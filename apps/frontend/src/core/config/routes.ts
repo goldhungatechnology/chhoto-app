@@ -12,7 +12,7 @@ export const ROUTES = {
   },
 
   DASHBOARD: {
-    ROOT: "/",
+    ROOT: "/dashboard",
 
     SETTINGS: {
       ROOT: "/settings",
