@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { OnboardingView } from "@/modules/auth/views";
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <OnboardingView />;
+  return (
+    <Suspense fallback={null}>
+      <OnboardingView />
+    </Suspense>
+  );
 }
