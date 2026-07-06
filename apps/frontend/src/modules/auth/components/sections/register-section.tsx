@@ -14,16 +14,20 @@ export default function RegisterSection() {
   };
 
   return (
-    <LoginRegisterLayout prompt={prompt} footerContent={
-      <div className="text-center">
-        <Link
-          href={ROUTES.AUTH.LOGIN}
-          className="text-sm text-slate-500 underline-offset-4 hover:text-slate-700 hover:underline"
-        >
-          Already have an account? Sign in
-        </Link>
-      </div>
-    }>
+    <LoginRegisterLayout
+      prompt={prompt}
+      footerContent={
+        <p className="text-center text-sm text-slate-500">
+          Already have an account?{" "}
+          <Link
+            href={ROUTES.AUTH.LOGIN}
+            className="font-medium text-primary underline-offset-4 hover:underline"
+          >
+            Login
+          </Link>
+        </p>
+      }
+    >
       <RegisterForm />
     </LoginRegisterLayout>
   );
