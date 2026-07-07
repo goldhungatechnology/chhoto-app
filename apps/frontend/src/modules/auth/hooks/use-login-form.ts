@@ -1,7 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { useForm, UseFormReturn, SubmitHandler, useWatch } from "react-hook-form";
+import {
+  useForm,
+  UseFormReturn,
+  SubmitHandler,
+  useWatch,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
@@ -69,17 +74,30 @@ export function useLoginForm(): UseLoginFormReturn {
       await loginAsync(data);
 
       toast.success("Logged in successfully!");
-
       router.push(ROUTES.DASHBOARD.ROOT);
-
       reset();
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Login failed. Please check your credentials.";
-
-      toast.error(errorMessage);
+      const apiError = error as {
+        errors?: Record<string, string>;
+        error?: string;
+      };
+      const errors = apiError?.errors;
+      if (errors) {
+        Object.entries(errors).forEach(([key, value]) => {
+          methods.setError(key as keyof LoginFormValues, {
+            type: "manual",
+            message: value,
+          });
+        });
+      } else {
+        const errorMessage =
+          typeof error === "string"
+            ? error
+            : error instanceof Error
+              ? error.message
+              : apiError?.error || "Login failed. Please try again.";
+        toast.error(errorMessage);
+      }
     } finally {
       setValue("captcha_token", "");
       turnstileRef.current?.reset();

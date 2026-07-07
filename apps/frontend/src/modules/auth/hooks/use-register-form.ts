@@ -109,28 +109,32 @@ export function useRegisterForm(): UseRegisterFormReturn {
 
       reset();
     } catch (error) {
-      const apiError = error as { errors?: Record<string, unknown>; message?: string };
+      const apiError = error as { errors?: Record<string, string>; error?: string };
       const errors = apiError?.errors;
       if (errors) {
         Object.entries(errors).forEach(([key, value]) => {
           if (key === "captcha_token") {
+            setError("cf_turnstile_response", {
+              type: "manual",
+              message: value,
+            });
             toast.error(
               "Security check failed. Please reload the page and try again.",
             );
           } else {
             setError(key as keyof RegisterFormValues, {
               type: "manual",
-              message: value as string,
+              message: value,
             });
           }
         });
       } else {
         const errorMessage =
-          error instanceof Error
-            ? error.message
-            : typeof error === "string"
-              ? error
-              : apiError?.message || "Registration failed. Please try again.";
+          typeof error === "string"
+            ? error
+            : error instanceof Error
+              ? error.message
+              : apiError?.error || "Registration failed. Please try again.";
         toast.error(errorMessage);
       }
     } finally {

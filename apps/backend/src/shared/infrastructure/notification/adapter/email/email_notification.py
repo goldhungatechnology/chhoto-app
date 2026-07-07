@@ -28,6 +28,7 @@ class EmailNotificationMessage:
     template_name: str
     context: dict[str, Any]
     recipient: list[str]
+    email_from: str
 
 
 class EmailNotification(INotification[EmailNotificationMessage]):
@@ -71,7 +72,7 @@ class EmailNotification(INotification[EmailNotificationMessage]):
         # Send via resolved provider
         # -----------------------------
         await provider.send_email(
-            sender=config.EMAIL_FROM,
+            sender=message.email_from,
             recipients=message.recipient,
             subject=message.subject,
             html_body=html_body,

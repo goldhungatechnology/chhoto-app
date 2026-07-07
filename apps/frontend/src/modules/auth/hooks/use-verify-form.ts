@@ -98,10 +98,17 @@ export function useVerifyForm(): UseVerifyFormReturn {
     } catch (error) {
       setState("error");
 
+      const apiError = error as {
+        errors?: Record<string, string>;
+        error?: string;
+      };
+
       const message =
-        error instanceof Error
-          ? error.message
-          : "Invalid verification code. Please try again.";
+        typeof error === "string"
+          ? error
+          : error instanceof Error
+            ? error.message
+            : apiError?.error || "Invalid verification code. Please try again.";
 
       setErrorMessage(message);
       setOtp(["", "", "", "", "", ""]);
@@ -124,10 +131,17 @@ export function useVerifyForm(): UseVerifyFormReturn {
       setState("idle");
       setErrorMessage("");
     } catch (error) {
+      const apiError = error as {
+        errors?: Record<string, string>;
+        error?: string;
+      };
+
       const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to resend code. Please try again.";
+        typeof error === "string"
+          ? error
+          : error instanceof Error
+            ? error.message
+            : apiError?.error || "Failed to resend code. Please try again.";
       setErrorMessage(message);
     }
   };

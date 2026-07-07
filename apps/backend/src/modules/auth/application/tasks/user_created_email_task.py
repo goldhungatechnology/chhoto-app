@@ -24,6 +24,7 @@ async def _send_user_created_email(*, email: str, username: str, token: str) -> 
             template_name="auth/email_verification.html",
             context={"username": username, "token": token},
             recipient=[email],
+            email_from="noreply@chhoto.tech",
         )
         await notification.send(message)
         logger.success("[Auth-Email] Successfully sent user-created email to %s", email)

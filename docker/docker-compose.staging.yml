@@ -8,9 +8,6 @@ services:
       - ../apps/backend/env/.env.staging
     environment:
       - ENVIRONMENT=staging
-      - DATABASE_URL=${STAGING_DATABASE_URL}
-      - REDIS_URL=${STAGING_REDIS_URL}
-      - SECRET_KEY=${STAGING_SECRET_KEY}
     ports:
       - "8000:8000"
     restart: on-failure
@@ -29,9 +26,6 @@ services:
       - ../apps/backend/env/.env.staging
     environment:
       - ENVIRONMENT=staging
-      - DATABASE_URL=${STAGING_DATABASE_URL}
-      - REDIS_URL=${STAGING_REDIS_URL}
-      - SECRET_KEY=${STAGING_SECRET_KEY}
     depends_on:
       - backend
     command: dramatiq src.shared.infrastructure.tasks.registry
@@ -47,9 +41,10 @@ services:
       file: docker-compose.base.yml
       service: frontend
     container_name: chhoto_frontend_staging
+    env_file:
+      - ../apps/frontend/.env.staging
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=${STAGING_API_URL}
     ports:
       - "3000:3000"
     depends_on:

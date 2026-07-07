@@ -123,9 +123,13 @@ export function useOnboarding(): UseOnboardingReturn {
 
       router.push(ROUTES.DASHBOARD.ROOT);
     } catch (error) {
-      const apiError = error as { errors?: Record<string, unknown>; message?: string };
+      const apiError = error as { errors?: Record<string, string>; error?: string };
       const errorMessage =
-        apiError?.message || "Failed to submit onboarding. Please try again.";
+        typeof error === "string"
+          ? error
+          : error instanceof Error
+            ? error.message
+            : apiError?.error || "Failed to submit onboarding. Please try again.";
       toast.error(errorMessage);
     }
   };

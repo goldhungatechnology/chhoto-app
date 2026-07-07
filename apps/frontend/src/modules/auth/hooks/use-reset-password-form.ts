@@ -81,12 +81,39 @@ export function useResetPasswordForm(
 
       toast.success("Password reset successfully!");
     } catch (error) {
-      const message = error instanceof Error ? error.message.toLowerCase() : "";
+      const apiError = error as {
+        errors?: Record<string, string>;
+        error?: string;
+      };
 
-      if (message.includes("expired") || message.includes("invalid")) {
+      const rawMessage =
+        typeof error === "string"
+          ? error
+          : error instanceof Error
+            ? error.message
+            : apiError?.error || "";
+
+      const message = rawMessage.toLowerCase();
+
+      if (
+        message.includes("expired") ||
+        message.includes("invalid") ||
+        message.includes("token")
+      ) {
         setState("invalid_token");
       } else {
         setState("idle");
+        const errors = apiError?.errors;
+        if (errors) {
+          Object.entries(errors).forEach(([key, value]) => {
+            methods.setError(key as keyof ResetPasswordFormValues, {
+              type: "manual",
+              message: value,
+            });
+          });
+        } else {
+          toast.error(rawMessage || "Failed to reset password. Please try again.");
+        }
       }
     }
   };

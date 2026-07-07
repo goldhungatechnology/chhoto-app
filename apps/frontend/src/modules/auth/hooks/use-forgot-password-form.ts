@@ -60,8 +60,29 @@ export function useForgotPasswordForm(): UseForgotPasswordFormReturn {
       setState("sent");
 
       toast.success("Password reset link sent to your email!");
-    } catch {
+    } catch (error) {
       setState("idle");
+      const apiError = error as {
+        errors?: Record<string, string>;
+        error?: string;
+      };
+      const errors = apiError?.errors;
+      if (errors) {
+        Object.entries(errors).forEach(([key, value]) => {
+          methods.setError(key as keyof ForgotPasswordFormValues, {
+            type: "manual",
+            message: value,
+          });
+        });
+      } else {
+        const errorMessage =
+          typeof error === "string"
+            ? error
+            : error instanceof Error
+              ? error.message
+              : apiError?.error || "Failed to send password reset link. Please try again.";
+        toast.error(errorMessage);
+      }
     }
   };
 
@@ -76,8 +97,19 @@ export function useForgotPasswordForm(): UseForgotPasswordFormReturn {
       setState("sent");
 
       toast.success("Password reset link resent!");
-    } catch {
+    } catch (error) {
       setState("idle");
+      const apiError = error as {
+        errors?: Record<string, string>;
+        error?: string;
+      };
+      const errorMessage =
+        typeof error === "string"
+          ? error
+          : error instanceof Error
+            ? error.message
+            : apiError?.error || "Failed to resend password reset link. Please try again.";
+      toast.error(errorMessage);
     }
   };
 
