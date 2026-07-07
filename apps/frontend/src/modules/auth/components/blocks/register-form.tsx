@@ -57,17 +57,6 @@ export default function RegisterForm() {
                 ? "Create account"
                 : "Continue"}
           </Button>
-
-          <p className="text-center text-sm text-slate-500">
-            Already have an account?{" "}
-            <Link
-              href={ROUTES.AUTH.LOGIN}
-              className="font-medium text-primary underline-offset-4 hover:underline"
-            >
-              Login
-            </Link>
-          </p>
-
           {showPassword && <RegisterTermsCheckbox />}
         </form>
       </FormProvider>
