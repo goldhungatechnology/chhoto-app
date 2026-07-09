@@ -14,7 +14,6 @@ RUN pip install uv
 COPY . .
 RUN uv pip install --system .
 
-COPY . .
 
 FROM python:3.13-slim AS runner
 
