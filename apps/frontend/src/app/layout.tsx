@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { ServerStateProvider } from "@/core/server-state";
 import { Snackbar } from "@/shared/components/custom/snackbar";
+import { ThemeProvider } from "@/shared/components/custom/theme-provider";
 
 import "./globals.css";
 
@@ -45,10 +46,18 @@ export default function RootLayout({
         "font-sans",
         inter.variable,
       )}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ServerStateProvider>{children}</ServerStateProvider>
-        <Snackbar />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ServerStateProvider>{children}</ServerStateProvider>
+          <Snackbar />
+        </ThemeProvider>
       </body>
     </html>
   );

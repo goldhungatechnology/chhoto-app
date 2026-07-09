@@ -1,4 +1,5 @@
 import { AuthGuard } from "@/modules/auth";
+import { Navbar } from "@/shared/components/custom/navbar";
 
 export default function AppLayout({
   children,
@@ -7,7 +8,10 @@ export default function AppLayout({
 }>) {
   return (
     <>
-      <AuthGuard>{children}</AuthGuard>
+      <AuthGuard>
+        <Navbar />
+        {children}
+      </AuthGuard>
     </>
   );
 }
