@@ -30,12 +30,12 @@ export default function LoginFormFields() {
 
       <div className="flex items-center justify-between gap-4 text-slate-600">
         <Controller
-          name="remember_me"
+          name="rememberMe"
           control={control}
           render={({ field }) => (
             <ShadcnField orientation="horizontal">
               <Checkbox
-                id="remember_me"
+                id="rememberMe"
                 checked={field.value}
                 onCheckedChange={field.onChange}
               />

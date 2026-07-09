@@ -17,12 +17,14 @@ import { toast } from "@/shared/components/custom/snackbar";
 import { ROUTES } from "@/core/config";
 
 import { useLogin } from "@/modules/auth/api/hooks";
+import useLocalStorage from "@/shared/hooks/use-localstorage";
 
 // ----------------------------------------------------------------------
 
 const Schema = z.object({
   email: z.email("Invalid email"),
   password: z.string().min(1, "Password is required"),
+  rememberMe: z.boolean(),
   captcha_token: z.string().min(1, "Please complete the CAPTCHA"),
 });
 
@@ -31,12 +33,6 @@ const Schema = z.object({
 export type LoginFormValues = z.infer<typeof Schema>;
 
 // ----------------------------------------------------------------------
-
-const defaultValues: LoginFormValues = {
-  email: "",
-  password: "",
-  captcha_token: "",
-};
 
 // ----------------------------------------------------------------------
 
@@ -55,8 +51,16 @@ interface UseLoginFormReturn {
 export function useLoginForm(): UseLoginFormReturn {
   const router = useRouter();
   const turnstileRef = useRef<TurnstileInstance | null>(null);
+  const { setItem, getItem } = useLocalStorage();
 
   const { loginAsync } = useLogin();
+
+  const defaultValues: LoginFormValues = {
+    email: getItem("email") || "",
+    password: getItem("password") || "",
+    captcha_token: "",
+    rememberMe: !!(getItem("email") && getItem("password")),
+  };
 
   const methods = useForm<LoginFormValues>({
     resolver: zodResolver(Schema),
@@ -71,11 +75,16 @@ export function useLoginForm(): UseLoginFormReturn {
     data: LoginFormValues,
   ) => {
     try {
-      await loginAsync(data);
+      const { rememberMe, ...finalData } = data;
+      await loginAsync(finalData);
 
-      toast.success("Logged in successfully!");
+      if (rememberMe) {
+        setItem("email", data.email);
+        setItem("password", data.password);
+      }
       router.push(ROUTES.DASHBOARD.ROOT);
       reset();
+      toast.success("Logged in successfully!");
     } catch (error) {
       const apiError = error as {
         errors?: Record<string, string>;
