@@ -2,14 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Home,
-  BarChart3,
-  QrCode,
-  HelpCircle,
-  Settings,
-  Link2,
-} from "lucide-react";
 import { Logo } from "@/shared/components/custom/logo";
 import {
   Sidebar,
@@ -22,50 +14,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/shared/components/ui/sidebar";
-
-const mainNavItems = [
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: Home,
-  },
-  {
-    title: "Links",
-    url: "/links",
-    icon: Link2,
-  },
-  {
-    title: "Analytics",
-    url: "/analytics",
-    icon: BarChart3,
-  },
-  {
-    title: "QR Codes",
-    url: "/qr-codes",
-    icon: QrCode,
-  },
-];
-
-const footerNavItems = [
-  {
-    title: "Help Center",
-    url: "/help",
-    icon: HelpCircle,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
-];
+import { mainNavItems, footerNavItems } from "@/data/sidebar/menu-items";
 
 export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar>
-      <SidebarHeader className="w-30">
-        <Logo className="w-30 h-20" />
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <Logo />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
