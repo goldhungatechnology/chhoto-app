@@ -1,10 +1,9 @@
 import { FormProvider } from "react-hook-form";
-import Link from "next/link";
 import { Turnstile } from "@marsidev/react-turnstile";
 
 import { Button } from "@/shared/components/ui/button";
 
-import { ROUTES, TURN_STILE_SITE_KEY } from "@/core/config";
+import { TURN_STILE_SITE_KEY } from "@/core/config";
 
 import { OAuthProviders, RegisterFormHeader } from "../primitives";
 import RegisterFormFields from "./register-form-fields";
@@ -40,16 +39,16 @@ export default function RegisterForm() {
           <Turnstile
             ref={turnstileRef}
             siteKey={TURN_STILE_SITE_KEY || ""}
-            options={{ size: "invisible" }}
+            // options={{ size: "invisible" }}
             onSuccess={onCaptchaSuccess}
             onExpire={onCaptchaExpire}
           />
 
           <Button
-            type={showPassword ? "submit" : "button"}
-            onClick={showPassword ? undefined : handleContinue}
+            type={"submit"}
+            onClick={handleContinue}
             className="h-11 w-full rounded-full bg-primary text-[15px] font-semibold text-white shadow-none hover:bg-primary-hover"
-            disabled={isSubmitting || (showPassword && !turnstileToken)}
+            disabled={isSubmitting || !turnstileToken}
           >
             {isSubmitting
               ? "Creating account..."
@@ -57,7 +56,7 @@ export default function RegisterForm() {
                 ? "Create account"
                 : "Continue"}
           </Button>
-          {showPassword && <RegisterTermsCheckbox />}
+          <RegisterTermsCheckbox />
         </form>
       </FormProvider>
     </>

@@ -34,56 +34,58 @@ export default function VerifyForm() {
   const isDisabled = isVerifying || state === "success";
 
   return (
-    <div className="min-h-screen py-6 flex flex-col bg-gradient-to-br from-slate-50 via-white to-slate-50/50">
-      <header className="w-full px-4 sm:px-6 flex justify-center">
-        <Logo className="h-8" />
-      </header>
+    <div className="min-h-screen py-6 flex items-center justify-center">
+      <section className="flex flex-col gap-6">
+        <header className="w-full px-4 sm:px-6 flex justify-center">
+          <Logo variant="md" />
+        </header>
 
-      <main className="flex-1 flex items-center justify-center">
-        {state === "success" ? (
-          <VerifySuccess />
-        ) : (
-          <div className="space-y-6">
-            <VerifyHeader email={userEmail} />
+        <main className="">
+          {state === "success" ? (
+            <VerifySuccess />
+          ) : (
+            <div className="space-y-6">
+              <VerifyHeader email={userEmail} />
 
-            <div className="space-y-4">
-              <VerifyOtpInput
-                value={otp}
-                disabled={isDisabled}
-                hasError={state === "error"}
-                onChange={handleOtpChange}
+              <div className="space-y-4">
+                <VerifyOtpInput
+                  value={otp}
+                  disabled={isDisabled}
+                  hasError={state === "error"}
+                  onChange={handleOtpChange}
+                />
+
+                {state === "error" && errorMessage && (
+                  <ErrorAlert message={errorMessage} />
+                )}
+              </div>
+
+              <Button
+                size="lg"
+                disabled={!isOtpComplete || isDisabled}
+                className="w-full h-12 text-base font-medium rounded-lg shadow-sm"
+                onClick={handleVerify}
+              >
+                {isVerifying ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  "Verify Account"
+                )}
+              </Button>
+
+              <VerifyActions
+                resendCooldown={resendCooldown}
+                onResend={handleResend}
               />
-
-              {state === "error" && errorMessage && (
-                <ErrorAlert message={errorMessage} />
-              )}
             </div>
+          )}
+        </main>
 
-            <Button
-              size="lg"
-              disabled={!isOtpComplete || isDisabled}
-              className="w-full h-12 text-base font-medium rounded-lg shadow-sm"
-              onClick={handleVerify}
-            >
-              {isVerifying ? (
-                <>
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                  Verifying...
-                </>
-              ) : (
-                "Verify Account"
-              )}
-            </Button>
-
-            <VerifyActions
-              resendCooldown={resendCooldown}
-              onResend={handleResend}
-            />
-          </div>
-        )}
-      </main>
-
-      <VerifyFooter />
+        <VerifyFooter />
+      </section>
     </div>
   );
 }

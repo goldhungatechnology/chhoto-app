@@ -45,7 +45,7 @@ export default function LoginForm() {
           <Turnstile
             ref={turnstileRef}
             siteKey={TURN_STILE_SITE_KEY || ""}
-            options={{ size: "invisible" }}
+            // options={{ size: "invisible" }}
             onSuccess={onCaptchaSuccess}
             onExpire={onCaptchaExpire}
           />

@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { UserDetails } from "@/modules/auth/api/auth.types";
-import { Avatar, AvatarImage, AvatarFallback } from "../../ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/ui/avatar";
 
 interface NavbarProfileProps {
   user: UserDetails;

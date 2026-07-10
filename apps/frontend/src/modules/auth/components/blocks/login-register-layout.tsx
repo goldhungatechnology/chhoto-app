@@ -30,7 +30,7 @@ export default function LoginRegisterLayout({
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(15,23,42,0.04),transparent_38%),radial-gradient(circle_at_bottom,rgba(15,23,42,0.02),transparent_28%)]" />
 
         <div className="relative z-10 flex items-center justify-center">
-          <Logo titleClassName="text-slate-900" />
+          <Logo variant="lg" />
         </div>
 
         <div className="relative flex flex-1 items-center py-8 sm:py-10">

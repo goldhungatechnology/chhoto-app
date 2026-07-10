@@ -3,8 +3,8 @@
 import { NavbarSearch } from "./navbar-search";
 import { NavbarThemeToggle } from "./navbar-theme-toggle";
 import { NavbarProfile } from "./navbar-profile";
-import { Logo } from "../logo";
 import { useNavbar } from "@/shared/hooks/use-navbar";
+import { SidebarTrigger } from "@/shared/components/ui/sidebar";
 
 export function Navbar() {
   const { toggleTheme, isCommandOpen, setIsCommandOpen, user, userLoading } =
@@ -16,9 +16,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full h-16 border-b border-border/40 bg-card px-4 sm:px-6 flex items-center justify-between transition-colors duration-200">
-      <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-        <Logo />
-      </div>
+      <SidebarTrigger />
 
       <div className="hidden md:flex flex-1 justify-center max-w-lg px-4">
         <NavbarSearch
