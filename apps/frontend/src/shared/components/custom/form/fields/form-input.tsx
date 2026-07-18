@@ -13,6 +13,7 @@ interface FormInputProps {
   description?: string;
   className?: string;
   inputClassName?: string;
+  labelClassName?: string;
   disabled?: boolean;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
@@ -26,6 +27,7 @@ export default function FormInput({
   type = "text",
   className,
   inputClassName,
+  labelClassName,
   disabled,
 }: FormInputProps) {
   const { control } = useFormContext();
@@ -33,25 +35,31 @@ export default function FormInput({
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid} className={className}>
-          <FieldLabel htmlFor={name}>{label}</FieldLabel>
+      render={({ field, fieldState }) => {
+        return (
+          <Field data-invalid={fieldState.invalid} className={className}>
+            {label && (
+              <FieldLabel htmlFor={name} className={labelClassName}>
+                {label}
+              </FieldLabel>
+            )}
 
-          <Input
-            {...field}
-            id={name}
-            type={type}
-            aria-invalid={fieldState.invalid}
-            placeholder={placeholder}
-            className={inputClassName}
-            disabled={disabled}
-          />
+            <Input
+              {...field}
+              id={name}
+              type={type}
+              aria-invalid={fieldState.invalid}
+              placeholder={placeholder}
+              className={inputClassName}
+              disabled={disabled}
+            />
 
-          {description && <FieldDescription>{description}</FieldDescription>}
+            {description && <FieldDescription>{description}</FieldDescription>}
 
-          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-        </Field>
-      )}
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        );
+      }}
     />
   );
 }

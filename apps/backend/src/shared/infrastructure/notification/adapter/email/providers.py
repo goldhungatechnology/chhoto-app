@@ -1,12 +1,33 @@
 import os
 from abc import ABC, abstractmethod
-from email.message import EmailMessage as SMTPEmailMessage
+from dataclasses import dataclass
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from pathlib import Path
 
 from aiosmtplib import SMTP
 import resend
 
 from src.core.config.settings import config
 from src.shared.infrastructure.logger import logger
+
+
+@dataclass(frozen=True)
+class InlineImage:
+    """
+    Represents an image to be embedded inline in an email using CID (Content-ID).
+
+    Attributes:
+        cid: The Content-ID header value (without angle brackets). The HTML
+             template references this via ``<img src="cid:<cid>">``.
+        file_path: Absolute path to the image file on disk.
+        mime_type: MIME type of the image, e.g. ``image/png``.
+    """
+
+    cid: str
+    file_path: Path
+    mime_type: str = "image/png"
 
 
 class IEmailProvider(ABC):
@@ -22,6 +43,7 @@ class IEmailProvider(ABC):
         recipients: list[str],
         subject: str,
         html_body: str,
+        inline_images: list["InlineImage"] | None = None,
     ) -> None:
         """
         Send an email notification using a specific vendor client.
@@ -41,17 +63,44 @@ class SMTPProvider(IEmailProvider):
         recipients: list[str],
         subject: str,
         html_body: str,
+        inline_images: list["InlineImage"] | None = None,
     ) -> None:
-        msg = SMTPEmailMessage()
-        msg["To"] = ", ".join(recipients)
-        msg["Subject"] = subject
-        msg["From"] = sender
+        if inline_images:
+            msg = MIMEMultipart("related")
+            msg["To"] = ", ".join(recipients)
+            msg["Subject"] = subject
+            msg["From"] = sender
 
-        msg.set_content("Please view this email in an HTML-compatible email viewer.")
-        msg.add_alternative(
-            html_body,
-            subtype="html",
-        )
+            # multipart/alternative inside multipart/related
+            alt_part = MIMEMultipart("alternative")
+            alt_part.attach(
+                MIMEText(
+                    "Please view this email in an HTML-compatible email viewer.",
+                    "plain",
+                )
+            )
+            alt_part.attach(MIMEText(html_body, "html"))
+            msg.attach(alt_part)
+
+            for img in inline_images:
+                img_data = img.file_path.read_bytes()
+                mime_img = MIMEImage(img_data, _subtype=img.mime_type.split("/", 1)[1])
+                mime_img.add_header("Content-ID", f"<{img.cid}>")
+                mime_img.add_header("Content-Disposition", "inline", filename=img.cid)
+                msg.attach(mime_img)
+        else:
+            msg = MIMEMultipart("alternative")
+            msg["To"] = ", ".join(recipients)
+            msg["Subject"] = subject
+            msg["From"] = sender
+
+            msg.attach(
+                MIMEText(
+                    "Please view this email in an HTML-compatible email viewer.",
+                    "plain",
+                )
+            )
+            msg.attach(MIMEText(html_body, "html"))
 
         smtp = SMTP(
             hostname=config.SMTP_HOST,
@@ -105,6 +154,7 @@ class ResendProvider(IEmailProvider):
         recipients: list[str],
         subject: str,
         html_body: str,
+        inline_images: list["InlineImage"] | None = None,
     ) -> None:
         api_key = self.api_key or os.environ.get("RESEND_API_KEY")
         if not api_key:
@@ -119,6 +169,19 @@ class ResendProvider(IEmailProvider):
             "subject": subject,
             "html": html_body,
         }
+
+        if inline_images:
+            import base64
+
+            params["attachments"] = [
+                {
+                    "filename": img.file_path.name,
+                    "content": base64.b64encode(img.file_path.read_bytes()).decode(),
+                    "content_type": img.mime_type,
+                    "content_id": img.cid,
+                }
+                for img in inline_images
+            ]
 
         try:
             logger.info(
@@ -145,6 +208,7 @@ class SendGridProvider(IEmailProvider):
         recipients: list[str],
         subject: str,
         html_body: str,
+        inline_images: list["InlineImage"] | None = None,
     ) -> None:
         logger.warning("[SendGrid-Email] SendGrid provider is not yet implemented.")
         raise NotImplementedError("SendGrid email provider is not implemented yet.")

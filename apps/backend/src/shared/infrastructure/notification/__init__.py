@@ -6,6 +6,7 @@ from .adapter.email.email_notification import (
 from .adapter.email.email_notification import (
     EmailNotificationMessage as EmailNotificationMessage,
 )
+from .adapter.email.providers import InlineImage as InlineImage
 from .interface.notification_interface import INotification
 
 

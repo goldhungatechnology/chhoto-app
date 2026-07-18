@@ -23,9 +23,14 @@ const Schema = z
       )
       .optional(),
     platform: z.enum(["web", "instagram", "youtube", "tiktok", "ads", "other"]),
+    customPlatform: z
+      .string()
+      .max(50, "Platform name must be less than 50 characters")
+      .optional(),
     generateQr: z.boolean(),
     autoExpire: z.boolean(),
     expiryDate: z.string().optional(),
+    expiryTime: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -37,6 +42,30 @@ const Schema = z
     {
       message: "Expiry date is required when auto-expire is enabled",
       path: ["expiryDate"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.autoExpire && !data.expiryTime) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Expiry time is required when auto-expire is enabled",
+      path: ["expiryTime"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.platform === "other" && !data.customPlatform?.trim()) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Platform name is required when 'Other' is selected",
+      path: ["customPlatform"],
     },
   );
 
@@ -60,9 +89,11 @@ export function useCreateLinkForm(
     title: "",
     customSlug: "",
     platform: "instagram",
+    customPlatform: "",
     generateQr: false,
     autoExpire: false,
     expiryDate: "",
+    expiryTime: "",
   };
 
   const methods = useForm<CreateLinkFormValues>({
@@ -74,15 +105,22 @@ export function useCreateLinkForm(
 
   const onSubmitHandler: SubmitHandler<CreateLinkFormValues> = async (data) => {
     try {
+      const platformTag =
+        data.platform === "other" && data.customPlatform
+          ? data.customPlatform.trim().toLowerCase()
+          : data.platform;
+
+      let autoExpireDate = null;
+      if (data.autoExpire && data.expiryDate && data.expiryTime) {
+        autoExpireDate = new Date(`${data.expiryDate}T${data.expiryTime}`).toISOString();
+      }
+
       const payload = {
         destination_url: data.url,
         title: data.title || undefined,
         custom_slug: data.customSlug || undefined,
-        tags: [`platform:${data.platform}`],
-        auto_expire:
-          data.autoExpire && data.expiryDate
-            ? new Date(data.expiryDate).toISOString()
-            : null,
+        tags: [`platform:${platformTag}`],
+        auto_expire: autoExpireDate,
       };
 
       const response = await createLinkAsync(payload);

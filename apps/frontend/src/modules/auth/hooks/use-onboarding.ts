@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { ROUTES } from "@/core/config";
 import { localStorageAdapter } from "@/core/local-storage";
 import { useOnboardingSubmit } from "../api/hooks/use-onboarding-submit";
@@ -27,6 +28,7 @@ export function useOnboarding(): UseOnboardingReturn {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const queryClient = useQueryClient();
 
   const currentStep = searchParams.get("step") || "1";
 
@@ -114,6 +116,8 @@ export function useOnboarding(): UseOnboardingReturn {
         theme: selectedTheme,
         referral_source: source,
       });
+
+      await queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
 
       toast.success("Onboarding completed successfully!");
 

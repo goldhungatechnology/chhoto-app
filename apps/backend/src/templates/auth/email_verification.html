@@ -1,12 +1,99 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title></title>
-    <link href="css/style.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Verify Your Email</title>
+    <style>
+      /* Reset */
+      body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+      table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+      img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+      body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #f4f5f7; }
+    </style>
   </head>
-  <body>
-    Welcome ({{ username }}), The token is {{ token }}
+  <body style="margin: 0; padding: 0; background-color: #f4f5f7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <!-- Preheader (hidden text for inbox preview) -->
+    <div style="display: none; max-height: 0; overflow: hidden;">
+      Verify your email address to get started with Chhoto URL.
+    </div>
+
+    <!-- Wrapper -->
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f5f7;">
+      <tr>
+        <td align="center" style="padding: 40px 16px;">
+          <!-- Card -->
+          <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+
+            <!-- Header -->
+            <tr>
+              <td align="center" style="background: linear-gradient(135deg, #00009c 0%, #0202ba 100%); padding: 36px 40px 32px;">
+                <img
+                  src="cid:chhoto-logo"
+                  alt="Chhoto URL"
+                  width="56"
+                  height="56"
+                  style="display: block; border-radius: 10px; margin: 0 auto 16px;"
+                />
+                <h1 style="margin: 0; font-size: 22px; font-weight: 600; color: #ffffff; letter-spacing: -0.3px;">
+                  Verify Your Email
+                </h1>
+                <p style="margin: 8px 0 0; font-size: 14px; color: #94a3b8;">
+                  Just one more step to get started
+                </p>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding: 36px 40px;">
+                <p style="margin: 0 0 16px; font-size: 15px; line-height: 24px; color: #334155;">
+                  Hi <strong>{{ username }}</strong>,
+                </p>
+                <p style="margin: 0 0 24px; font-size: 15px; line-height: 24px; color: #475569;">
+                  Use the verification code below to confirm your email address and activate your account.
+                </p>
+
+                <!-- Token Box -->
+                <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td align="center" style="padding: 0 0 24px;">
+                      <div style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 16px 24px; text-align: center;">
+                        <span style="display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 6px;">Verification Code</span>
+                        <span style="display: block; font-size: 28px; font-weight: 700; letter-spacing: 6px; color: #00009c; font-family: 'Courier New', Courier, monospace;">{{ token }}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin: 0 0 8px; font-size: 14px; line-height: 22px; color: #64748b;">
+                  This code will expire in <strong>24 hours</strong>. If you did not create an account, you can safely ignore this email.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding: 24px 40px; border-top: 1px solid #f1f5f9;">
+                <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <p style="margin: 0 0 4px; font-size: 13px; font-weight: 500; color: #00009c;">
+                        Chhoto URL
+                      </p>
+                      <p style="margin: 0; font-size: 12px; color: #94a3b8;">
+                        &copy; 2025 Gold Hunga Technology. All rights reserved.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
   </body>
 </html>

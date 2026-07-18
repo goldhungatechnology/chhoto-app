@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -8,7 +8,7 @@ from src.core.config.settings import config
 from src.shared.infrastructure.logger import logger
 
 from ...interface.notification_interface import INotification
-from .providers import EmailProviderFactory
+from .providers import EmailProviderFactory, InlineImage
 
 TEMPLATE_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "templates"
 
@@ -29,6 +29,7 @@ class EmailNotificationMessage:
     context: dict[str, Any]
     recipient: list[str]
     email_from: str
+    inline_images: list[InlineImage] = field(default_factory=list)
 
 
 class EmailNotification(INotification[EmailNotificationMessage]):
@@ -76,4 +77,5 @@ class EmailNotification(INotification[EmailNotificationMessage]):
             recipients=message.recipient,
             subject=message.subject,
             html_body=html_body,
+            inline_images=message.inline_images,
         )

@@ -79,6 +79,22 @@ File naming: kebab-case (e.g., `customer-rentals-section.tsx`)
 - Reverse dependency (any lower layer importing a higher layer)
 - Cross-layer coupling (any non-adjacent layer import)
 
+## Component Minimization & Design Guidelines
+
+To maintain clean and highly readable code, components must be kept as small and modular as possible:
+
+1. **Minimize Component Size**: Break down complex components (like forms, multi-state cards, list items) into smaller sub-components. If a component exceeds ~150-200 lines, extract its sections.
+   - For example, split a form card into a container, a fields component (`*-form-fields.tsx`), and a success state component (`*-success.tsx`).
+   - Smaller helper components can reside in the same file if they are simple, or in separate files within the same directory for cleaner structure.
+2. **Standardized Forms**:
+   - Never use raw `<input>` or raw `<Input>` directly for form fields.
+   - Use the custom form wrapper components from `@/shared/components/custom/form`, e.g., `Field.Input` or `Field.PasswordInput`.
+   - These enhanced inputs support properties like `startAddon`, `endAddon`, `labelClassName`, and custom styling to handle prefix/suffix elements without raw HTML tags.
+   - Wrap forms using React Hook Form's `<FormProvider>` to supply form context to child components (e.g. `<LoginFormFields />` or `<CreateLinkFormFields />`).
+3. **UI and Logic Separation**:
+   - Keep presentational components thin by delegating all logic, form handling, validation schemas, and API queries/mutations to custom hooks (e.g., `useLoginForm` or `useCreateLinkForm`).
+   - UI components should only compose sub-components and pass data/handlers.
+
 ## Hooks (`hooks/`)
 
 Business-specific hooks containing:
