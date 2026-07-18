@@ -25,11 +25,12 @@ def register_middlewares(app: FastAPI):
     app.add_middleware(UserContextMiddleware)
     app.add_middleware(AuthMiddleware)
     app.add_middleware(RequestContextMiddleware)
+    is_https = config.APP_URL.startswith("https")
     app.add_middleware(
         SessionMiddleware,
         secret_key=config.SECRET_KEY,
-        same_site="none",
-        https_only=config.APP_URL.startswith("https"),
+        same_site="none" if is_https else "lax",
+        https_only=is_https,
     )
     app.add_middleware(
         CORSMiddleware,
