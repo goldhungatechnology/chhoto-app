@@ -40,7 +40,7 @@ class RedirectLinkUseCase:
         try:
             link = await self.link_domain_service.get_link_by_short_url(short_url)
 
-            if not link:
+            if not link or not link.id:
                 raise NotFoundError(
                     error="Short URL not found",
                     errors={"short_url": "This short URL does not exist"},
