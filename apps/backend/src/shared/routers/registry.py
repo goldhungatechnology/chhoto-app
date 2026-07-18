@@ -8,9 +8,13 @@ from src.core.utils.response import (
     CustomSuccessResponseSchema,
 )
 from src.core.utils.response import CustomResponse as cr
+
 ## Modules routers ##
 from src.modules.auth.presentation.routers.auth_routers_registry import (
     router as auth_router,
+)
+from src.modules.links.presentation.routers.link_routers_registry import (
+    router as links_router,
 )
 
 from src.shared.infrastructure.background_task_manager.routers import (
@@ -56,6 +60,7 @@ async def health_check():
     Health check endpoint returning system status.
     """
     from starlette.status import HTTP_200_OK
+
     return cr.success(
         data={"status": "healthy", "service": "chhoto-backend"},
         message="System is running smoothly",
@@ -69,12 +74,16 @@ def register_routers(app: FastAPI):
     """
 
     main_router.include_router(auth_router, prefix="/auth")
+    main_router.include_router(links_router, prefix="/links")
     main_router.include_router(background_task_router)
     main_router.include_router(country_router, prefix="/countries")
-    
-    @app.get("/health", response_model=CustomSuccessResponseSchema[dict], tags=["System"])
+
+    @app.get(
+        "/health", response_model=CustomSuccessResponseSchema[dict], tags=["System"]
+    )
     async def root_health():
         from starlette.status import HTTP_200_OK
+
         return cr.success(
             data={"status": "healthy"},
             message="System is running smoothly",
@@ -82,4 +91,3 @@ def register_routers(app: FastAPI):
         )
 
     app.include_router(main_router)
-
