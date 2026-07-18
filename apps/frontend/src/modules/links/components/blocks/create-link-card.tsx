@@ -130,7 +130,11 @@ export function CreateLinkCard() {
   const isQrEnabled = useWatch({ control, name: "generateQr" });
   const isExpireEnabled = useWatch({ control, name: "autoExpire" });
 
-  const platforms: { id: PlatformCategory; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  const platforms: {
+    id: PlatformCategory;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }[] = [
     { id: "web", label: "Web", icon: Globe },
     { id: "instagram", label: "Instagram", icon: InstagramIcon },
     { id: "youtube", label: "YouTube", icon: YoutubeIcon },

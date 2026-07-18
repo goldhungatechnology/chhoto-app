@@ -11,10 +11,12 @@ export default function Dashboard() {
             <Sparkles className="size-6 fill-primary/10" />
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-zinc-50 sm:text-5xl">
-            Welcome to <span className="bg-gradient-brand bg-clip-text text-transparent">Chhoto</span>
+            Welcome to{" "}
+            <span className="bg-primary text-background">Chhoto</span>
           </h1>
           <p className="text-base text-zinc-600 dark:text-zinc-400 max-w-md mx-auto">
-            Your premium, self-hosted link management platform. Create short links, track metrics, and generate QR codes.
+            Your premium, self-hosted link management platform. Create short
+            links, track metrics, and generate QR codes.
           </p>
         </div>
 
@@ -25,8 +27,12 @@ export default function Dashboard() {
               <Link2 className="size-6" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-foreground">Shorten Links</h3>
-              <p className="text-xs text-muted-foreground">Create trackable, branded custom links.</p>
+              <h3 className="font-bold text-sm text-foreground">
+                Shorten Links
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Create trackable, branded custom links.
+              </p>
             </div>
             <Button size="sm" className="rounded-xl mt-2 w-full" asChild>
               <Link href="/links">Go to Links</Link>
@@ -38,10 +44,19 @@ export default function Dashboard() {
               <BarChart3 className="size-6" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-foreground">View Analytics</h3>
-              <p className="text-xs text-muted-foreground">Analyze clicks, devices, and countries.</p>
+              <h3 className="font-bold text-sm text-foreground">
+                View Analytics
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Analyze clicks, devices, and countries.
+              </p>
             </div>
-            <Button size="sm" variant="outline" className="rounded-xl mt-2 w-full" asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              className="rounded-xl mt-2 w-full"
+              asChild
+            >
               <Link href="/analytics">Analytics</Link>
             </Button>
           </div>
@@ -52,9 +67,16 @@ export default function Dashboard() {
             </div>
             <div className="space-y-1">
               <h3 className="font-bold text-sm text-foreground">QR Codes</h3>
-              <p className="text-xs text-muted-foreground">Download dynamic QR codes for print.</p>
+              <p className="text-xs text-muted-foreground">
+                Download dynamic QR codes for print.
+              </p>
             </div>
-            <Button size="sm" variant="outline" className="rounded-xl mt-2 w-full" asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              className="rounded-xl mt-2 w-full"
+              asChild
+            >
               <Link href="/qr-codes">QR Codes</Link>
             </Button>
           </div>
