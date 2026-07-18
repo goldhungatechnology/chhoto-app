@@ -62,7 +62,7 @@ class Settings(BaseSettings):
     CORS_ALLOWED_ORIGINS: list[str] = [FRONTEND_URL]
     # Only honor X-Forwarded-For / proxy headers when running behind a trusted
     # reverse proxy; otherwise clients could spoof their source IP.
-    TRUST_PROXY_HEADERS: bool = False
+    TRUST_PROXY_HEADERS: bool = True
 
     ## ---------------------------------------------- GeoIP --------------------------------
     # Path to the MaxMind GeoLite2-City .mmdb file. When the feature is disabled

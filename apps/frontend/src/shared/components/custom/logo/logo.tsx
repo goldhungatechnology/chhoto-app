@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import clsx from "clsx";
 
 interface LogoProps {
@@ -15,10 +16,13 @@ export function Logo({ className, variant = "md" }: LogoProps) {
 
   return (
     <Link href="/" className={clsx("inline-block", sizes[variant], className)}>
-      <img
+      <Image
         src="/assets/logo/chhoto-logo.png"
         alt="Logo"
+        width={160}
+        height={64}
         className="w-full h-full object-contain"
+        unoptimized
       />
     </Link>
   );

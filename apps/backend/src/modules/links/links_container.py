@@ -2,6 +2,9 @@ from dependency_injector import containers, providers
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.modules.links.application.usecases.create_link_usecase import CreateLinkUseCase
+from src.modules.links.application.usecases.list_link_sessions_usecase import (
+    ListLinkSessionsUseCase,
+)
 from src.modules.links.application.usecases.list_links_usecase import ListLinksUseCase
 from src.modules.links.application.usecases.redirect_link_usecase import (
     RedirectLinkUseCase,
@@ -56,6 +59,12 @@ class LinksContainer(containers.DeclarativeContainer):
 
     redirect_link_usecase = providers.Factory(
         RedirectLinkUseCase,
+        link_domain_service=link_domain_service,
+        link_session_domain_service=link_session_domain_service,
+    )
+
+    list_link_sessions_usecase = providers.Factory(
+        ListLinkSessionsUseCase,
         link_domain_service=link_domain_service,
         link_session_domain_service=link_session_domain_service,
     )

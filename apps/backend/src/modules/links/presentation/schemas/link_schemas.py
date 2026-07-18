@@ -45,3 +45,19 @@ class LinkResponseSchema(BaseSchema):
     created_at: datetime
 
     model_config = {"from_attributes": True, "extra": "ignore"}
+
+
+class LinkSessionResponseSchema(BaseSchema):
+    """
+    Response schema for a single link session (click event).
+    """
+
+    uuid: str
+    link_id: int
+    ip_address: str | None = None
+    device: str | None = None
+    browser: str | None = None
+    referral_source: str | None = None
+    created_at: datetime
+
+    model_config = {"from_attributes": True, "extra": "ignore"}

@@ -7,6 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.response import CustomResponse as cr
 from src.core.utils.response import CustomSuccessResponseSchema
 from src.modules.links.application.usecases.create_link_usecase import CreateLinkUseCase
+from src.modules.links.application.usecases.list_link_sessions_usecase import (
+    ListLinkSessionsUseCase,
+)
 from src.modules.links.application.usecases.list_links_usecase import ListLinksUseCase
 from src.modules.links.application.usecases.redirect_link_usecase import (
     RedirectLinkUseCase,
@@ -16,6 +19,7 @@ from src.modules.links.links_container import get_links_container
 from src.modules.links.presentation.schemas.link_schemas import (
     CreateLinkRequestSchema,
     LinkResponseSchema,
+    LinkSessionResponseSchema,
 )
 from src.shared.dependencies.access_guard import require_access
 from src.shared.infrastructure.db import get_async_session
@@ -79,6 +83,32 @@ async def list_links(
     return cr.success(
         data=[LinkResponseSchema.model_validate(link) for link in links],
         message="Links retrieved successfully",
+    )
+
+
+@protected_router.get(
+    "/sessions/{link_uuid}",
+    response_model=CustomSuccessResponseSchema[list[LinkSessionResponseSchema]],
+)
+async def list_link_sessions(
+    link_uuid: str,
+    request: Request,
+    session: AsyncSessionDep,
+):
+    """
+    List all sessions (clicks) for a specific link by its UUID.
+    """
+    async with LinksUOW(session):
+        container = get_links_container(session)
+        usecase: ListLinkSessionsUseCase = container.list_link_sessions_usecase()
+        sessions = await usecase.execute(
+            link_uuid=link_uuid,
+            user_id=request.state.user_id,
+        )
+
+    return cr.success(
+        data=[LinkSessionResponseSchema.model_validate(s) for s in sessions],
+        message="Link sessions retrieved successfully",
     )
 
 

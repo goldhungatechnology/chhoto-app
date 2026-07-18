@@ -11,6 +11,8 @@ export const ROUTES = {
     ROOT: "/auth/onboarding",
   },
 
+  LINKS: "/links",
+
   DASHBOARD: {
     ROOT: "/dashboard",
 
