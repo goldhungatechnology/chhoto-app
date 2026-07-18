@@ -74,8 +74,8 @@ services:
       context: ../apps/frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_BASE_URL: https://stagingapi.chhoto.app/api/v1
-        NEXT_PUBLIC_TURNSTILE_SITE_KEY: 0x4AAAAAADv7oABo6nCRe9hE
+        NEXT_PUBLIC_API_BASE_URL: ${STAGING_API_URL}
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${STAGING_TURNSTILE_SITE_KEY}
     env_file:
       - ../apps/frontend/.env.staging
     ports:
