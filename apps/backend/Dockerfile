@@ -12,13 +12,14 @@ RUN apt-get update \
 
 RUN pip install uv
 
-COPY pyproject.toml .
-COPY uv.lock .
+COPY apps/backend/pyproject.toml .
+COPY apps/backend/uv.lock .
 
-COPY . .
+COPY apps/backend/ .
+COPY apps/packages/chhoto_encoding/ ../packages/chhoto_encoding/
 
 
-RUN uv sync --locked --system
+RUN uv sync --locked
 EXPOSE 8000
 
-CMD ["uvicorn","src.main:create_app","--host","0.0.0.0","--port","8000","--factory"]
+CMD ["uv","run","uvicorn","src.main:create_app","--host","0.0.0.0","--port","8000","--factory"]

@@ -56,7 +56,7 @@ services:
         condition: service_healthy
       redis_staging:
         condition: service_healthy
-    command: dramatiq src.shared.infrastructure.tasks.registry
+    command: uv run dramatiq src.shared.infrastructure.tasks.registry
     restart: on-failure
     logging:
       driver: json-file

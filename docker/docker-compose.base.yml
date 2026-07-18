@@ -23,8 +23,8 @@ services:
 
   backend:
     build:
-      context: ../apps/backend
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: apps/backend/Dockerfile
     image: chhoto-backend:latest
     networks:
       - chhoto_network

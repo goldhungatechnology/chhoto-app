@@ -30,7 +30,7 @@ class LinkTableMigration(BaseMigration):
         self.text("destination_url", nullable=False)
         self.string("short_url", length=255, unique=True, index=True, nullable=False)
         self.array("tags", item_type="String", nullable=True)
-        self.date_time("auto_expire", timezone=True, nullable=True)
+        self.date_time("auto_expire", nullable=True)
         self.biginteger("total_clicks", nullable=False, default=0)
         self.string("title", length=255, nullable=True, default=None)
 

@@ -1,0 +1,42 @@
+# Version control
+.git
+.gitignore
+
+# Frontend - not needed for backend build
+apps/frontend
+
+# Infrastructure configs
+infra
+
+# Documentation
+*.md
+docs
+
+# Python artifacts
+__pycache__
+*.py[cod]
+*.pyo
+*.egg-info
+.venv
+venv
+
+# Development tools
+.ruff_cache
+.mypy_cache
+.pytest_cache
+.pyright
+.pre-commit-config.yaml
+
+# Environment files
+.env*
+!.env.example
+
+# Docker files (avoid recursive builds)
+docker
+
+# GitHub workflows
+.github
+
+# Other
+*.log
+logs

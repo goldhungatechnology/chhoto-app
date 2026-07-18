@@ -35,7 +35,7 @@ AsyncSessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 
 @protected_router.post(
-    "/links",
+    "/",
     response_model=CustomSuccessResponseSchema[LinkResponseSchema],
 )
 async def create_link(
@@ -58,7 +58,7 @@ async def create_link(
 
 
 @protected_router.get(
-    "/links",
+    "/",
     response_model=CustomSuccessResponseSchema[list[LinkResponseSchema]],
 )
 async def list_links(
