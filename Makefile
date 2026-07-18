@@ -12,13 +12,13 @@ devdownv:
 	docker compose -p $(PROJECT_NAME)-dev -f ./docker/docker-compose.base.yml -f ./docker/docker-compose.dev.yml down -v
 
 stagingup:
-	docker compose -p $(PROJECT_NAME)-staging  -f ./docker/docker-compose.staging.yml up -d
+	docker compose -p $(PROJECT_NAME)-staging --project-directory . -f ./docker/docker-compose.staging.yml up -d
 
 stagingb:
-	docker compose -p $(PROJECT_NAME)-staging  -f ./docker/docker-compose.staging.yml build
+	docker compose -p $(PROJECT_NAME)-staging --project-directory . -f ./docker/docker-compose.staging.yml build
 
 stagingdown:
-	docker compose -p $(PROJECT_NAME)-staging  -f ./docker/docker-compose.staging.yml down
+	docker compose -p $(PROJECT_NAME)-staging --project-directory . -f ./docker/docker-compose.staging.yml down
 
 stagingdownv:
-	docker compose -p $(PROJECT_NAME)-staging  -f ./docker/docker-compose.staging.yml down -v
+	docker compose -p $(PROJECT_NAME)-staging --project-directory . -f ./docker/docker-compose.staging.yml down -v
