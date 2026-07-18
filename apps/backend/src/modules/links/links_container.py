@@ -3,6 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.modules.links.application.usecases.create_link_usecase import CreateLinkUseCase
 from src.modules.links.application.usecases.list_links_usecase import ListLinksUseCase
+from src.modules.links.application.usecases.redirect_link_usecase import (
+    RedirectLinkUseCase,
+)
 from src.modules.links.domain.services.link_domain_service import LinkDomainService
 from src.modules.links.domain.services.link_session_domain_service import (
     LinkSessionDomainService,
@@ -49,6 +52,12 @@ class LinksContainer(containers.DeclarativeContainer):
     list_links_usecase = providers.Factory(
         ListLinksUseCase,
         link_domain_service=link_domain_service,
+    )
+
+    redirect_link_usecase = providers.Factory(
+        RedirectLinkUseCase,
+        link_domain_service=link_domain_service,
+        link_session_domain_service=link_session_domain_service,
     )
 
 

@@ -3,11 +3,9 @@ from typing import Annotated, Any
 from fastapi import APIRouter, FastAPI, File, UploadFile
 from starlette.status import HTTP_201_CREATED
 
-from src.core.utils.response import (
-    CustomErrorResponseSchema,
-    CustomSuccessResponseSchema,
-)
+from src.core.utils.response import CustomErrorResponseSchema
 from src.core.utils.response import CustomResponse as cr
+from src.core.utils.response import CustomSuccessResponseSchema
 
 ## Modules routers ##
 from src.modules.auth.presentation.routers.auth_routers_registry import (
@@ -16,12 +14,11 @@ from src.modules.auth.presentation.routers.auth_routers_registry import (
 from src.modules.links.presentation.routers.link_routers_registry import (
     router as links_router,
 )
-
 from src.shared.infrastructure.background_task_manager.routers import (
     router as background_task_router,
 )
-from src.shared.routers.country.country_router import public_router as country_router
 from src.shared.infrastructure.uploader import uploader
+from src.shared.routers.country.country_router import public_router as country_router
 from src.shared.schemas.file_schema import UploadedFileResponse
 
 main_router = APIRouter(

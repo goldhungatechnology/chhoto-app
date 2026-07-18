@@ -24,12 +24,15 @@ OPENAPI: list[str] = ["/docs", "/openapi.json", "/redoc", "/metrics"]
 
 SYSTEM: list[str] = ["/health", "/api/v1/health"]
 
+LINK: list[str] = ["/api/v1/links/redirect/"]
+
 
 PUBLIC_PATHS_METHODS: dict[str, list[str] | None] = {
     **dict.fromkeys(AUTH),
     **dict.fromkeys(OPENAPI),
     **dict.fromkeys(COUNTRY),
     **dict.fromkeys(SYSTEM),
+    **dict.fromkeys(LINK),
     **DUMMY,
 }
 
