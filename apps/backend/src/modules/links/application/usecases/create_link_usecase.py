@@ -1,5 +1,6 @@
-import random
-import string
+import uuid
+
+from chhoto_encoding import encode
 
 from src.modules.links.domain.entities.link_entity import LinkEntity
 from src.modules.links.domain.services.link_domain_service import LinkDomainService
@@ -24,8 +25,14 @@ class CreateLinkUseCase:
         payload: CreateLinkRequestSchema,
         user_id: int,
     ) -> LinkEntity:
+        """
+        Execute the use case to create a new short link.
+        """
         try:
-            short_url = payload.custom_slug or self._generate_short_url()
+            entity_uuid = uuid.uuid4()
+            short_url = payload.custom_slug or self._generate_short_url(
+                value=entity_uuid.int
+            )
 
             if await self.link_domain_service.get_link_by_short_url(short_url):
                 raise ConflictError(
@@ -34,6 +41,7 @@ class CreateLinkUseCase:
                 )
 
             link = LinkEntity(
+                uuid=str(entity_uuid),
                 user_id=user_id,
                 destination_url=str(payload.destination_url),
                 short_url=short_url,
@@ -53,5 +61,14 @@ class CreateLinkUseCase:
             ) from e
 
     @staticmethod
-    def _generate_short_url(length: int = 6) -> str:
-        return "".join(random.choices(string.ascii_letters + string.digits, k=length))
+    def _generate_short_url(value: int) -> str:
+        """
+        Generate a short URL using the chhoto_encoding library.
+
+        Args:
+            value (int): The integer value to encode.
+
+        Returns:
+            str: The generated short URL.
+        """
+        return encode(value)

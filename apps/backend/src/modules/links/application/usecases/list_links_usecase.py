@@ -12,6 +12,9 @@ class ListLinksUseCase:
         self.link_domain_service = link_domain_service
 
     async def execute(self, user_id: int) -> list[LinkEntity]:
+        """
+        Execute the use case to list all links for a user.
+        """
         try:
             return await self.link_domain_service.list_links_by_user_id(user_id)
         except DomainError:

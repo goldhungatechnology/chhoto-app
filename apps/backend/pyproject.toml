@@ -33,6 +33,7 @@ dependencies = [
     "pre-commit>=4.6.0",
     "resend[async]>=2.32.2",
     "uvicorn>=0.49.0",
+    "chhoto_encoding"
 ]
 
 [dependency-groups]
@@ -52,3 +53,6 @@ filterwarnings = [
 
 [tool.ruff.lint]
 ignore = ["F403"]
+
+[tool.uv.sources]
+chhoto_encoding = { path = "../packages/chhoto_encoding/", editable = true }
