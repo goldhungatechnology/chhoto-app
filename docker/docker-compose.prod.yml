@@ -53,9 +53,14 @@ services:
       file: docker-compose.base.yml
       service: frontend
     container_name: chhoto_frontend_prod
+    build:
+      context: ../apps/frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${PROD_API_URL}
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${PROD_TURNSTILE_SITE_KEY}
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=${PROD_API_URL}
     ports:
       - "3000:3000"
     depends_on:
