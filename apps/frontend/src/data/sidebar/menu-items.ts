@@ -2,9 +2,6 @@ import { LucideIcon } from "lucide-react";
 import {
   Home,
   BarChart3,
-  QrCode,
-  HelpCircle,
-  Settings,
   Link2,
 } from "lucide-react";
 
@@ -29,23 +26,5 @@ export const mainNavItems: NavItem[] = [
     title: "Analytics",
     url: "/analytics",
     icon: BarChart3,
-  },
-  {
-    title: "QR Codes",
-    url: "/qr-codes",
-    icon: QrCode,
-  },
-];
-
-export const footerNavItems: NavItem[] = [
-  {
-    title: "Help Center",
-    url: "/help",
-    icon: HelpCircle,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
   },
 ];

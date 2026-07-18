@@ -50,3 +50,18 @@ export interface ListLinksResponse {
   data: LinkData[];
   message: string;
 }
+
+export interface LinkSession {
+  uuid: string;
+  link_id: number;
+  ip_address: string | null;
+  device: string | null;
+  browser: string | null;
+  referral_source: string | null;
+  created_at: string;
+}
+
+export interface ListLinkSessionsResponse {
+  data: LinkSession[];
+  message: string;
+}

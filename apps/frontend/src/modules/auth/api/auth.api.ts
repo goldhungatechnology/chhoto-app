@@ -23,6 +23,8 @@ import type {
   OnboardingResponse,
   //
   MeResponse,
+  UpdateProfileRequest,
+  UpdateProfileResponse,
 } from "./auth.types";
 
 import { ENDPOINTS } from "./endpoints";
@@ -81,5 +83,18 @@ export class AuthApi {
 
   me = (): Promise<MeResponse> => {
     return this.client.get<MeResponse>(ENDPOINTS.ME);
+  };
+
+  updateProfile = (
+    payload: UpdateProfileRequest,
+  ): Promise<UpdateProfileResponse> => {
+    return this.client.patch<UpdateProfileResponse>(
+      ENDPOINTS.PROFILE,
+      payload,
+    );
+  };
+
+  logout = (): Promise<void> => {
+    return this.client.post<void>(ENDPOINTS.LOGOUT);
   };
 }

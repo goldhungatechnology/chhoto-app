@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SearchIcon, Settings, User, LogOut, Moon, Sun } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { SearchIcon, User, LogOut, Moon, Sun, Home, Link2, BarChart3 } from "lucide-react";
+import { useLogout } from "@/modules/auth/api/hooks";
 import {
   CommandDialog,
   CommandInput,
@@ -24,6 +26,16 @@ export function NavbarSearch({
   onThemeToggle,
 }: NavbarSearchProps) {
   const [platform, setPlatform] = useState("⌘K");
+  const router = useRouter();
+  const { logoutAsync } = useLogout();
+
+  const handleLogout = async () => {
+    try {
+      await logoutAsync();
+    } catch {
+      // Handled by hook
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -61,20 +73,38 @@ export function NavbarSearch({
             <CommandItem
               onSelect={() => {
                 setIsOpen(false);
-                alert("Navigating to Profile...");
+                router.push("/dashboard");
               }}
             >
-              <User className="mr-2 h-4 w-4" />
-              <span>Go to Profile</span>
+              <Home className="mr-2 h-4 w-4" />
+              <span>Go to Dashboard</span>
             </CommandItem>
             <CommandItem
               onSelect={() => {
                 setIsOpen(false);
-                alert("Navigating to Settings...");
+                router.push("/links");
               }}
             >
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings & Preferences</span>
+              <Link2 className="mr-2 h-4 w-4" />
+              <span>Go to Links</span>
+            </CommandItem>
+            <CommandItem
+              onSelect={() => {
+                setIsOpen(false);
+                router.push("/analytics");
+              }}
+            >
+              <BarChart3 className="mr-2 h-4 w-4" />
+              <span>Go to Analytics</span>
+            </CommandItem>
+            <CommandItem
+              onSelect={() => {
+                setIsOpen(false);
+                router.push("/profile");
+              }}
+            >
+              <User className="mr-2 h-4 w-4" />
+              <span>Go to Profile</span>
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
@@ -90,9 +120,9 @@ export function NavbarSearch({
               <span>Toggle Theme (Light / Dark)</span>
             </CommandItem>
             <CommandItem
-              onSelect={() => {
+              onSelect={async () => {
                 setIsOpen(false);
-                alert("Logging out...");
+                await handleLogout();
               }}
             >
               <LogOut className="mr-2 h-4 w-4 text-destructive" />

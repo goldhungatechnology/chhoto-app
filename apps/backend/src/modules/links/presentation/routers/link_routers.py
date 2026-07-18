@@ -14,12 +14,14 @@ from src.modules.links.application.usecases.list_links_usecase import ListLinksU
 from src.modules.links.application.usecases.redirect_link_usecase import (
     RedirectLinkUseCase,
 )
+from src.modules.links.application.usecases.update_link_usecase import UpdateLinkUseCase
 from src.modules.links.infrastructure.uow.links_uow import LinksUOW
 from src.modules.links.links_container import get_links_container
 from src.modules.links.presentation.schemas.link_schemas import (
     CreateLinkRequestSchema,
     LinkResponseSchema,
     LinkSessionResponseSchema,
+    UpdateLinkRequestSchema,
 )
 from src.shared.dependencies.access_guard import require_access
 from src.shared.infrastructure.db import get_async_session
@@ -109,6 +111,34 @@ async def list_link_sessions(
     return cr.success(
         data=[LinkSessionResponseSchema.model_validate(s) for s in sessions],
         message="Link sessions retrieved successfully",
+    )
+
+
+@protected_router.patch(
+    "/{link_uuid}",
+    response_model=CustomSuccessResponseSchema[LinkResponseSchema],
+)
+async def update_link(
+    link_uuid: str,
+    body: UpdateLinkRequestSchema,
+    request: Request,
+    session: AsyncSessionDep,
+):
+    """
+    Update a short link title by UUID.
+    """
+    async with LinksUOW(session):
+        container = get_links_container(session)
+        usecase: UpdateLinkUseCase = container.update_link_usecase()
+        link = await usecase.execute(
+            link_uuid=link_uuid,
+            user_id=request.state.user_id,
+            title=body.title,
+        )
+
+    return cr.success(
+        data=LinkResponseSchema.model_validate(link),
+        message="Link updated successfully",
     )
 
 

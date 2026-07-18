@@ -7,4 +7,6 @@ export const ENDPOINTS = {
   RESET_PASSWORD: "/auth/password/forgot/verify",
   ONBOARDING: "/auth/onboarding",
   ME: "/auth/me",
+  PROFILE: "/auth/profile",
+  LOGOUT: "/auth/logout",
 } as const;

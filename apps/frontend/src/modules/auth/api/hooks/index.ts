@@ -13,3 +13,7 @@ export { useResetPassword } from "./use-reset-password";
 export { useOnboardingSubmit } from "./use-onboarding-submit";
 
 export { useMe } from "./use-me";
+
+export { useUpdateProfile } from "./use-update-profile";
+
+export { useLogout } from "./use-logout";

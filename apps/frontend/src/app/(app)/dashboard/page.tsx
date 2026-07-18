@@ -21,7 +21,7 @@ export default function Dashboard() {
         </div>
 
         {/* Quick action grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-4">
           <div className="flex flex-col items-center justify-between gap-4 p-6 bg-card border border-border/60 rounded-3xl text-center shadow-md">
             <div className="p-3 bg-primary-soft/10 text-primary rounded-2xl">
               <Link2 className="size-6" />
@@ -58,26 +58,6 @@ export default function Dashboard() {
               asChild
             >
               <Link href="/analytics">Analytics</Link>
-            </Button>
-          </div>
-
-          <div className="flex flex-col items-center justify-between gap-4 p-6 bg-card border border-border/60 rounded-3xl text-center shadow-md">
-            <div className="p-3 bg-primary-soft/10 text-primary rounded-2xl">
-              <QrCode className="size-6" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-sm text-foreground">QR Codes</h3>
-              <p className="text-xs text-muted-foreground">
-                Download dynamic QR codes for print.
-              </p>
-            </div>
-            <Button
-              size="sm"
-              variant="outline"
-              className="rounded-xl mt-2 w-full"
-              asChild
-            >
-              <Link href="/qr-codes">QR Codes</Link>
             </Button>
           </div>
         </div>

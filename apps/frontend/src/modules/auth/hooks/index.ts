@@ -12,3 +12,4 @@ export {
   type ResetPasswordState,
 } from "./use-reset-password-form";
 export { useOnboarding, type UseOnboardingReturn } from "./use-onboarding";
+export { useProfileForm } from "./use-profile-form";

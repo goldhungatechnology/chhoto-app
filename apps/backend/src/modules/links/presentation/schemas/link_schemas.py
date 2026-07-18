@@ -61,3 +61,11 @@ class LinkSessionResponseSchema(BaseSchema):
     created_at: datetime
 
     model_config = {"from_attributes": True, "extra": "ignore"}
+
+
+class UpdateLinkRequestSchema(BaseSchema):
+    """
+    Request schema for updating a link.
+    """
+
+    title: str | None = None

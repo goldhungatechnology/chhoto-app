@@ -3,6 +3,8 @@ import type {
   CreateLinkRequest,
   CreateLinkResponse,
   ListLinksResponse,
+  ListLinkSessionsResponse,
+  LinkData,
 } from "../types";
 
 export class LinksApi {
@@ -18,5 +20,23 @@ export class LinksApi {
 
   listLinks = (): Promise<ListLinksResponse> => {
     return this.client.get<ListLinksResponse>("/links/");
+  };
+
+  updateLink = (
+    linkUuid: string,
+    payload: { title: string | null },
+  ): Promise<{ data: LinkData; message: string }> => {
+    return this.client.patch<{ data: LinkData; message: string }>(
+      `/links/${linkUuid}`,
+      payload,
+    );
+  };
+
+  listLinkSessions = (
+    linkUuid: string,
+  ): Promise<ListLinkSessionsResponse> => {
+    return this.client.get<ListLinkSessionsResponse>(
+      `/links/sessions/${linkUuid}`,
+    );
   };
 }

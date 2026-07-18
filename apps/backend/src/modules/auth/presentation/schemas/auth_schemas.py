@@ -85,6 +85,9 @@ class EditProfileRequestSchema(BaseSchema):
 
     full_name: str | None = Field(default=None, description="The full name of the user")
     avatar: str | None = Field(default=None, description="The avatar URL of the user")
+    avatar_bg: str | None = Field(
+        default=None, description="The background color for the user's avatar"
+    )
     phone_number: str | None = Field(
         default=None, description="The phone number of the user"
     )

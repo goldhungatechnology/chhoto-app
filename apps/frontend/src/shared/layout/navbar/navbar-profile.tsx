@@ -3,10 +3,7 @@
 import {
   ChevronDown,
   User,
-  Settings,
-  CreditCard,
   LogOut,
-  HelpCircle,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -18,19 +15,35 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { UserDetails } from "@/modules/auth/api/auth.types";
 import { Avatar, AvatarImage, AvatarFallback } from "@/shared/components/ui/avatar";
+import { useLogout } from "@/modules/auth/api/hooks";
+
+import Link from "next/link";
 
 interface NavbarProfileProps {
   user: UserDetails;
 }
 
 export function NavbarProfile({ user }: NavbarProfileProps) {
+  const { logoutAsync } = useLogout();
+
+  const handleLogout = async () => {
+    try {
+      await logoutAsync();
+    } catch {
+      // Handled by the hook
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="flex gap-4 items-center hover:cursor-pointer">
           <Avatar>
             <AvatarImage src={user?.avatar || ""} />
-            <AvatarFallback className="bg-primary text-background">
+            <AvatarFallback
+              className="text-white font-bold"
+              style={{ backgroundColor: user?.avatar_bg || "var(--primary)" }}
+            >
               {user?.full_name?.split("")[0]}
             </AvatarFallback>
           </Avatar>
@@ -58,31 +71,16 @@ export function NavbarProfile({ user }: NavbarProfileProps) {
 
         <DropdownMenuSeparator className="-mx-2 my-1" />
 
-        <DropdownMenuItem className="cursor-pointer rounded-xl">
-          <User className="mr-2.5 h-4 w-4 text-muted-foreground/85" />
-          <span>My Profile</span>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem className="cursor-pointer rounded-xl">
-          <Settings className="mr-2.5 h-4 w-4 text-muted-foreground/85" />
-          <span>Settings</span>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem className="cursor-pointer rounded-xl">
-          <CreditCard className="mr-2.5 h-4 w-4 text-muted-foreground/85" />
-          <span>Billing & Plans</span>
+        <DropdownMenuItem className="cursor-pointer rounded-xl" asChild>
+          <Link href="/profile" className="flex items-center w-full">
+            <User className="mr-2.5 h-4 w-4 text-muted-foreground/85" />
+            <span>My Profile</span>
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator className="-mx-2 my-1" />
 
-        <DropdownMenuItem className="cursor-pointer rounded-xl">
-          <HelpCircle className="mr-2.5 h-4 w-4 text-muted-foreground/85" />
-          <span>Help & Support</span>
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator className="-mx-2 my-1" />
-
-        <DropdownMenuItem className="cursor-pointer rounded-xl text-destructive focus:bg-destructive/10 focus:text-destructive dark:focus:bg-destructive/20">
+        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer rounded-xl text-destructive focus:bg-destructive/10 focus:text-destructive dark:focus:bg-destructive/20">
           <LogOut className="mr-2.5 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

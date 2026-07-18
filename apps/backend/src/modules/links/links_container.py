@@ -9,6 +9,7 @@ from src.modules.links.application.usecases.list_links_usecase import ListLinksU
 from src.modules.links.application.usecases.redirect_link_usecase import (
     RedirectLinkUseCase,
 )
+from src.modules.links.application.usecases.update_link_usecase import UpdateLinkUseCase
 from src.modules.links.domain.services.link_domain_service import LinkDomainService
 from src.modules.links.domain.services.link_session_domain_service import (
     LinkSessionDomainService,
@@ -54,6 +55,11 @@ class LinksContainer(containers.DeclarativeContainer):
 
     list_links_usecase = providers.Factory(
         ListLinksUseCase,
+        link_domain_service=link_domain_service,
+    )
+
+    update_link_usecase = providers.Factory(
+        UpdateLinkUseCase,
         link_domain_service=link_domain_service,
     )
 

@@ -110,3 +110,18 @@ export interface MeResponse {
   };
   message: string;
 }
+
+export interface UpdateProfileRequest {
+  full_name?: string | null;
+  avatar?: string | null;
+  avatar_bg?: string | null;
+  phone_number?: string | null;
+  country_uuid?: string | null;
+}
+
+export interface UpdateProfileResponse {
+  data: {
+    user: UserDetails;
+  };
+  message: string;
+}
