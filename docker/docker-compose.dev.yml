@@ -16,8 +16,6 @@ services:
       file: docker-compose.base.yml
       service: redis
     container_name: chhoto_redis_dev
-    env_file:
-      - ../apps/backend/env/.env.development
     ports:
       - "6379:6379"
     volumes:
@@ -30,15 +28,15 @@ services:
     container_name: chhoto_backend_dev
     env_file:
       - ../apps/backend/env/.env.development
-    environment:
-      - ENVIRONMENT=development
     ports:
       - "8000:8000"
     volumes:
       - ../apps/backend:/app
     depends_on:
-      - db_dev
-      - redis_dev
+      db_dev:
+        condition: service_healthy
+      redis_dev:
+        condition: service_healthy
     command: uvicorn src.main:create_app --host 0.0.0.0 --port 8000 --reload --factory
 
   background_worker:
@@ -48,13 +46,13 @@ services:
     container_name: chhoto_worker_dev
     env_file:
       - ../apps/backend/env/.env.development
-    environment:
-      - ENVIRONMENT=development
     volumes:
       - ../apps/backend:/app
     depends_on:
-      - db_dev
-      - redis_dev
+      db_dev:
+        condition: service_healthy
+      redis_dev:
+        condition: service_healthy
     command: dramatiq src.shared.infrastructure.tasks.registry
 
   frontend:
@@ -66,7 +64,6 @@ services:
       - ../apps/frontend/.env.local
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
     ports:
       - "3000:3000"
     volumes:

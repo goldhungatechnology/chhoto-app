@@ -1,38 +1,30 @@
 services:
   db_staging:
-    image: postgres:15-alpine
+    extends:
+      file: docker-compose.base.yml
+      service: db
     container_name: chhoto_db_staging
     env_file:
-      - "../apps/backend/env/.env.staging"
+      - ../apps/backend/env/.env.staging
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
       - postgres_staging_data:/var/lib/postgresql/data
-    networks:
-      - chhoto_network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   redis_staging:
-    image: redis:7-alpine
+    extends:
+      file: docker-compose.base.yml
+      service: redis
     container_name: chhoto_redis_staging
     ports:
       - "127.0.0.1:6379:6379"
     volumes:
       - redis_staging_data:/data
-    networks:
-      - chhoto_network
-    restart: unless-stopped
 
   backend_staging:
-    build:
-      context: ../apps/backend
-      dockerfile: Dockerfile
-      target: runner
+    extends:
+      file: docker-compose.base.yml
+      service: backend
     image: chhoto-backend:staging
     container_name: chhoto_backend_staging
     env_file:
@@ -43,23 +35,18 @@ services:
       db_staging:
         condition: service_healthy
       redis_staging:
-        condition: service_started
-    networks:
-      - chhoto_network
+        condition: service_healthy
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
     logging:
-      driver: "json-file"
+      driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
 
   background_worker_staging:
+    extends:
+      file: docker-compose.base.yml
+      service: background_worker
     image: chhoto-backend:staging
     container_name: chhoto_worker_staging
     env_file:
@@ -68,37 +55,30 @@ services:
       db_staging:
         condition: service_healthy
       redis_staging:
-        condition: service_started
-    networks:
-      - chhoto_network
+        condition: service_healthy
     command: dramatiq src.shared.infrastructure.tasks.registry
     restart: on-failure
     logging:
-      driver: "json-file"
+      driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
 
   frontend_staging:
-    build:
-      context: ../apps/frontend
-      dockerfile: Dockerfile
-      target: runner
-      args:
-        - NEXT_PUBLIC_API_URL=https://stagingapi.chhoto.app
+    extends:
+      file: docker-compose.base.yml
+      service: frontend
     image: chhoto-frontend:staging
     container_name: chhoto_frontend_staging
     env_file:
-      - "../apps/frontend/.env.staging"
+      - ../apps/frontend/.env.staging
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
       - backend_staging
-    networks:
-      - chhoto_network
     restart: on-failure
     logging:
-      driver: "json-file"
+      driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
