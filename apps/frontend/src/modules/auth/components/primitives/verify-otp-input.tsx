@@ -57,14 +57,14 @@ export default function VerifyOtpInput({
             <InputOTPSlot
               key={index}
               index={index}
-              className={`w-12 h-14 sm:w-14 sm:h-16 text-xl sm:text-2xl rounded-lg border-2 transition-all${
+              className={`w-12 h-14 sm:w-14 sm:h-16 text-xl sm:text-2xl rounded-lg border-2 transition-all ${
                 hasError
                   ? "border-red-300 data-[active=true]:ring-red-500/20 aria-invalid:border-red-500"
-                  : "border-slate-200 data-[active=true]:border-slate-900 data-[active=true]:ring-slate-900/20"
+                  : "border-slate-200 dark:border-slate-800 data-[active=true]:border-slate-900 dark:data-[active=true]:border-slate-100 data-[active=true]:ring-slate-900/20"
               } ${
                 value[index]
-                  ? "border-slate-900 bg-slate-50"
-                  : "hover:border-slate-300"
+                  ? "border-slate-900 dark:border-slate-100 bg-slate-50 dark:bg-slate-900"
+                  : "hover:border-slate-300 dark:hover:border-slate-700"
               }`}
             />
           ))}
