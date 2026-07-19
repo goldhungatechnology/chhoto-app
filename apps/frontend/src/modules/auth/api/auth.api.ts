@@ -25,6 +25,8 @@ import type {
   MeResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
+  InterfaceSetupRequest,
+  InterfaceSetupResponse,
 } from "./auth.types";
 
 import { ENDPOINTS } from "./endpoints";
@@ -90,6 +92,15 @@ export class AuthApi {
   ): Promise<UpdateProfileResponse> => {
     return this.client.patch<UpdateProfileResponse>(
       ENDPOINTS.PROFILE,
+      payload,
+    );
+  };
+
+  interfaceSetup = (
+    payload: InterfaceSetupRequest,
+  ): Promise<InterfaceSetupResponse> => {
+    return this.client.put<InterfaceSetupResponse>(
+      ENDPOINTS.INTERFACE,
       payload,
     );
   };

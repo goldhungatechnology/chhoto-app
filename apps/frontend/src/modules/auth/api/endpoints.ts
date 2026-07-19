@@ -9,4 +9,5 @@ export const ENDPOINTS = {
   ME: "/auth/me",
   PROFILE: "/auth/profile",
   LOGOUT: "/auth/logout",
+  INTERFACE: "/auth/interface",
 } as const;

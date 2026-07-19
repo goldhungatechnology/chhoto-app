@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { ServerStateProvider } from "@/core/server-state";
 import { Snackbar } from "@/shared/components/custom/snackbar";
 import { ThemeProvider } from "@/shared/components/custom/theme-provider";
+import { ThemeSync } from "@/shared/components/custom/theme-sync";
+import { BetaNotice } from "@/shared/components/custom/beta-notice";
 
 import "./globals.css";
 
@@ -55,12 +57,16 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
-          <ServerStateProvider>{children}</ServerStateProvider>
+          <ServerStateProvider>
+            <ThemeSync />
+            {children}
+          </ServerStateProvider>
           <Snackbar />
+          <BetaNotice />
         </ThemeProvider>
       </body>
     </html>

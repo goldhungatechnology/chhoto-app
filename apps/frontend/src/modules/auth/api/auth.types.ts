@@ -125,3 +125,12 @@ export interface UpdateProfileResponse {
   };
   message: string;
 }
+
+export interface InterfaceSetupRequest {
+  theme: "light" | "dark";
+  language: string;
+}
+
+export interface InterfaceSetupResponse {
+  message: string;
+}

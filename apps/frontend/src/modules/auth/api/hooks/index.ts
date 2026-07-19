@@ -16,4 +16,6 @@ export { useMe } from "./use-me";
 
 export { useUpdateProfile } from "./use-update-profile";
 
+export { useUpdateInterface } from "./use-update-interface";
+
 export { useLogout } from "./use-logout";

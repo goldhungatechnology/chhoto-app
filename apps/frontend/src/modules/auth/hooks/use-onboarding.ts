@@ -7,6 +7,7 @@ import { ROUTES, APP_DOMAIN } from "@/core/config";
 import { localStorageAdapter } from "@/core/local-storage";
 import { useOnboardingSubmit } from "../api/hooks/use-onboarding-submit";
 import { toast } from "@/shared/components/custom/snackbar";
+import { useTheme } from "next-themes";
 
 export interface UseOnboardingReturn {
   currentStep: string;
@@ -29,6 +30,7 @@ export function useOnboarding(): UseOnboardingReturn {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const queryClient = useQueryClient();
+  const { setTheme: setNextTheme } = useTheme();
 
   const currentStep = searchParams.get("step") || "1";
 
@@ -47,10 +49,13 @@ export function useOnboarding(): UseOnboardingReturn {
     setTimeout(() => {
       setIsMounted(true);
       if (savedName) setFullName(savedName);
-      if (savedTheme) setTheme(savedTheme);
+      if (savedTheme) {
+        setTheme(savedTheme);
+        setNextTheme(savedTheme);
+      }
       if (savedSource) setReferralSource(savedSource);
     }, 0);
-  }, []);
+  }, [setNextTheme]);
 
   const handleSetFullName = (name: string) => {
     setFullName(name);
@@ -60,6 +65,9 @@ export function useOnboarding(): UseOnboardingReturn {
   const handleSetTheme = (newTheme: "light" | "dark" | "") => {
     setTheme(newTheme);
     localStorageAdapter.setItem("onboarding_theme", newTheme);
+    if (newTheme === "light" || newTheme === "dark") {
+      setNextTheme(newTheme);
+    }
   };
 
   const handleSetReferralSource = (source: string) => {

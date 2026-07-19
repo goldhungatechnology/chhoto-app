@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/shared/components/ui/button";
-import { Link2, Sparkles, BarChart3, QrCode } from "lucide-react";
+import { Link2, Sparkles, BarChart3 } from "lucide-react";
 
 export default function Dashboard() {
   return (

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useTheme } from "next-themes";
-import { useMe } from "@/modules/auth/api/hooks";
+import { useMe, useUpdateInterface } from "@/modules/auth/api/hooks";
 
 export const useNavbar = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -22,10 +22,16 @@ export const useNavbar = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const { updateInterfaceAsync } = useUpdateInterface();
+
   // Theme Toggle logic
   const toggleTheme = useCallback(() => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-  }, [resolvedTheme, setTheme]);
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    if (data?.data?.user) {
+      updateInterfaceAsync({ theme: nextTheme, language: "en" }).catch(() => {});
+    }
+  }, [theme, setTheme, data, updateInterfaceAsync]);
 
   // Sidebar toggle triggering a custom window event
   const toggleSidebar = useCallback(() => {
@@ -37,7 +43,7 @@ export const useNavbar = () => {
 
   return {
     theme: theme,
-    resolvedTheme: "light",
+    resolvedTheme: resolvedTheme || "light",
     toggleTheme,
     searchQuery,
     setSearchQuery,

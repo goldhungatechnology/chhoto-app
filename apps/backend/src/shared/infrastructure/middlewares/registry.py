@@ -1,7 +1,8 @@
+import re
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-import re
 
 from src.core.config.settings import config
 from src.shared.infrastructure.middlewares.auth_middleware import AuthMiddleware
@@ -33,10 +34,23 @@ def register_middlewares(app: FastAPI):
         same_site="none" if is_https else "lax",
         https_only=is_https,
     )
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origin_regex=rf"^https://([a-zA-Z0-9-]+\.)?{re.escape(config.ALLOWED_ORIGIN_DOMAIN)}$",
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    if config.is_staging:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origin_regex=rf"^https://([a-zA-Z0-9-]+\.)?{re.escape(config.ALLOWED_ORIGIN_DOMAIN)}$",
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+    else:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=[
+                "http://localhost:3000",
+                "http://auth.localhost:3000",
+                "http://app.localhost:3000",
+            ],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
