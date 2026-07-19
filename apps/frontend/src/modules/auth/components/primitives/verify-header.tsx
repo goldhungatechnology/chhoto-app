@@ -22,7 +22,9 @@ export default function VerifyHeader({ email }: VerifyHeaderProps) {
 
         <p className="text-sm sm:text-base text-slate-600 dark:text-gray-300 leading-relaxed">
           We sent a 6-digit code to{" "}
-          <span className="font-medium text-slate-900">{email}</span>
+          <span className="font-medium text-slate-900 dark:text-primary">
+            {email}
+          </span>
           <br />
           Enter it below to continue.
         </p>

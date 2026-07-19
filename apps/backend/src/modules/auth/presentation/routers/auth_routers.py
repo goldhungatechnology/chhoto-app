@@ -183,8 +183,6 @@ async def me(request: Request, session: AsyncSessionDep):
                     else None
                 ),
             },
-            "organizations": None,
-            "current_organization": None,
             "security": {
                 "last_password_changed_at": (
                     user_account.last_password_updated_at if user_account else None
