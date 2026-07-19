@@ -57,9 +57,9 @@ class Settings(BaseSettings):
     FRONTEND_URL: str = "http://localhost:3000"
     OAUTH_SUCCESS_REDIRECT_URL: str = f"{FRONTEND_URL}/dashboard"
     OAUTH_FAILURE_REDIRECT_URL: str = f"{FRONTEND_URL}/login?error=oauth_failed"
+    ALLOWED_ORIGIN_DOMAIN: str = "domain.com"
     # Origins allowed to make credentialed cross-origin requests. Defaults to
     # the configured frontend; override per-environment via env (comma/JSON list).
-    CORS_ALLOWED_ORIGINS: list[str] = [FRONTEND_URL]
     # Only honor X-Forwarded-For / proxy headers when running behind a trusted
     # reverse proxy; otherwise clients could spoof their source IP.
     TRUST_PROXY_HEADERS: bool = True
