@@ -45,17 +45,16 @@ export default function LoginRegisterLayout({
               <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
                 <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span className="h-3 w-3 rounded-full bg-slate-400" />
-                  headspace
+                  YatraKit
                 </span>
                 <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span className="h-3 w-3 rounded-full border border-slate-400" />
-                  airbnb
+                  NetVibes
                 </span>
-                <span className="text-sm font-medium text-slate-700">
-                  Revolut
-                </span>
-                <span className="text-sm font-medium text-slate-700">
-                  duolingo
+
+                <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <span className="h-3 w-3 rounded-full border border-slate-400" />
+                  Itend
                 </span>
               </div>
             </div>
