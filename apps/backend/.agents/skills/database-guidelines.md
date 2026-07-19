@@ -12,7 +12,7 @@ This document details database architecture and migration rules for AI coding ag
 - Use the imperative table design pattern by subclassing `BaseMigration` from `migrations/base.py` for structured migrations:
   ```python
   from migrations.base import BaseMigration
-  
+
   class CreateUsersTableMigration(BaseMigration):
       table_name = "sys_auth_users"
       def __init__(self):

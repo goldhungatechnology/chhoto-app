@@ -21,11 +21,11 @@ repos:
       - id: frontend-eslint
         name: Frontend ESLint
         language: system
-        entry: bash -c "cd apps/frontend && pnpm lint"
+        entry: bash -c "cd apps/frontend && npm run lint"
         pass_filenames: false
 
       - id: frontend-types
         name: Frontend Type Check
         language: system
-        entry: bash -c "cd apps/frontend && pnpm typecheck"
+        entry: bash -c "cd apps/frontend && npm run typecheck"
         pass_filenames: false

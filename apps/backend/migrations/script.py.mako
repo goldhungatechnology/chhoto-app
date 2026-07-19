@@ -5,7 +5,7 @@ Revises: ${down_revision | comma,n}
 Create Date: ${create_date}
 
 """
-<% 
+<%
 from os import getenv
 name=getenv("MIGRATION_NAME", "Migration")%>
 from migrations.base import BaseMigration
@@ -30,7 +30,7 @@ def upgrade() -> None:
   Function to create a table
   """
   ${name}Migration().upgrade()
-  
+
 
 def downgrade() -> None:
   """

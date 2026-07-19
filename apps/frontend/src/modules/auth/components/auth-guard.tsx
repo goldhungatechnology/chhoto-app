@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
 import { useMe } from "../api/hooks/use-me";
-import { ROUTES } from "@/core/config";
+import { ROUTES, AUTH_DOMAIN, APP_DOMAIN } from "@/core/config";
 
 // ----------------------------------------------------------------------
 
@@ -20,9 +20,14 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   useEffect(() => {
     if (isLoading) return;
 
+    const isCurrentlyOnAuthDomain = window.location.origin === AUTH_DOMAIN;
+    const isCurrentlyOnAppDomain = window.location.origin === APP_DOMAIN;
+
     // 1. Session Expired or Unauthenticated
     if (error || !data?.data?.user) {
-      if (!pathname.startsWith("/auth")) {
+      if (isCurrentlyOnAppDomain) {
+        window.location.replace(`${AUTH_DOMAIN}${ROUTES.AUTH.LOGIN}`);
+      } else if (isCurrentlyOnAuthDomain && !pathname.startsWith("/auth")) {
         router.replace(ROUTES.AUTH.LOGIN);
       }
       return;
@@ -32,7 +37,9 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
     // 2. Email Verification Required
     if (!is_email_verified) {
-      if (pathname !== ROUTES.AUTH.VERIFY) {
+      if (isCurrentlyOnAppDomain) {
+        window.location.replace(`${DOMAINS_AUTH_FALLBACK(AUTH_DOMAIN)}${ROUTES.AUTH.VERIFY}`);
+      } else if (isCurrentlyOnAuthDomain && pathname !== ROUTES.AUTH.VERIFY) {
         router.replace(ROUTES.AUTH.VERIFY);
       }
       return;
@@ -40,14 +47,18 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
     // 3. Onboarding Required
     if (!is_onboarded) {
-      if (pathname !== ROUTES.ONBOARDING.ROOT) {
+      if (isCurrentlyOnAppDomain) {
+        window.location.replace(`${DOMAINS_AUTH_FALLBACK(AUTH_DOMAIN)}${ROUTES.ONBOARDING.ROOT}`);
+      } else if (isCurrentlyOnAuthDomain && pathname !== ROUTES.ONBOARDING.ROOT) {
         router.replace(ROUTES.ONBOARDING.ROOT);
       }
       return;
     }
 
     // 4. If user is on an auth page but fully authenticated, redirect to Dashboard
-    if (
+    if (isCurrentlyOnAuthDomain) {
+      window.location.replace(`${APP_DOMAIN}${ROUTES.DASHBOARD.ROOT}`);
+    } else if (
       pathname.startsWith("/auth") &&
       pathname !== ROUTES.ONBOARDING.ROOT &&
       pathname !== ROUTES.AUTH.VERIFY
@@ -70,6 +81,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }
 
   // Prevent flash of protected content before redirect
+  const isCurrentlyOnAuthDomain =
+    typeof window !== "undefined" && window.location.origin === AUTH_DOMAIN;
   const isAuthPage = pathname.startsWith("/auth");
   const isVerified = data?.data?.user?.is_email_verified;
   const isOnboarded = data?.data?.user?.is_onboarded;
@@ -78,6 +91,12 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   if (!isVerified && pathname !== ROUTES.AUTH.VERIFY) return null;
   if (isVerified && !isOnboarded && pathname !== ROUTES.ONBOARDING.ROOT)
     return null;
+  if (isVerified && isOnboarded && isCurrentlyOnAuthDomain) return null;
 
   return <>{children}</>;
+}
+
+// Helper to handle fallback if domain origin needs cleaning
+function DOMAINS_AUTH_FALLBACK(domain: string) {
+  return domain;
 }

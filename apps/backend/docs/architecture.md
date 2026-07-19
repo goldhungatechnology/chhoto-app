@@ -1,6 +1,6 @@
 # System Architecture
 
-The Chhoto App Backend follows **Domain-Driven Design (DDD)** and **Clean Architecture** patterns. 
+The Chhoto App Backend follows **Domain-Driven Design (DDD)** and **Clean Architecture** patterns.
 
 ## Architectural Philosophy
 Our primary design goal is strict layer isolation: the core business domain should not depend on external frameworks, databases, or transport protocols.

@@ -106,9 +106,7 @@ class LoginUserUseCase:
                     "session_uuid": session.uuid,
                 }
 
-            token = self._generate_temp_valid_details_token(
-                user.id
-            )
+            token = self._generate_temp_valid_details_token(user.id)
             return {
                 "mfa_required": True,
                 "temp_token": token,

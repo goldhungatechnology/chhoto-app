@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { ROUTES } from "@/core/config";
+import { ROUTES, APP_DOMAIN } from "@/core/config";
 import { localStorageAdapter } from "@/core/local-storage";
 import { useOnboardingSubmit } from "../api/hooks/use-onboarding-submit";
 import { toast } from "@/shared/components/custom/snackbar";
@@ -125,7 +125,7 @@ export function useOnboarding(): UseOnboardingReturn {
       localStorageAdapter.removeItem("onboarding_theme");
       localStorageAdapter.removeItem("onboarding_referral_source");
 
-      router.push(ROUTES.DASHBOARD.ROOT);
+      window.location.assign(`${APP_DOMAIN}${ROUTES.DASHBOARD.ROOT}`);
     } catch (error) {
       const apiError = error as { errors?: Record<string, string>; error?: string };
       const errorMessage =

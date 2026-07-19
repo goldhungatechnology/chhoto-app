@@ -48,7 +48,6 @@ class UserSessionEntity(BaseEntity, AuditMixin):
         },
     )
 
-
     @staticmethod
     def set_expiration() -> datetime:
         """

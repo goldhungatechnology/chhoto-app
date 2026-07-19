@@ -104,7 +104,9 @@ async def test_execute_returns_country_details_when_country_id_set(
     get_user_details_usecase.country_reader.get_country_by_id = AsyncMock(
         return_value=mock_country
     )
-    get_user_details_usecase.cache_service.is_user_online = AsyncMock(return_value=False)
+    get_user_details_usecase.cache_service.is_user_online = AsyncMock(
+        return_value=False
+    )
     get_user_details_usecase.user_onboarding_domain_service.get_user_onboarding_by_user_id = AsyncMock(
         return_value=None
     )
@@ -178,7 +180,4 @@ async def test_execute_wraps_unexpected_error_in_server_error(
         await get_user_details_usecase.execute(
             user_id=1, session_uuid="test-session-uuid"
         )
-    assert (
-        exc_info.value.error
-        == "An error occurred while retrieving user details"
-    )
+    assert exc_info.value.error == "An error occurred while retrieving user details"

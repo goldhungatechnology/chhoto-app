@@ -53,4 +53,3 @@ def require_access(
         return AccessContext(user=user)
 
     return dependency
-

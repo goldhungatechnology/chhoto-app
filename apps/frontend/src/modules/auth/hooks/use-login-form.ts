@@ -9,12 +9,11 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
 import { type TurnstileInstance } from "@marsidev/react-turnstile";
 
 import { toast } from "@/shared/components/custom/snackbar";
 
-import { ROUTES } from "@/core/config";
+import { ROUTES, APP_DOMAIN } from "@/core/config";
 
 import { useLogin } from "@/modules/auth/api/hooks";
 import useLocalStorage from "@/shared/hooks/use-localstorage";
@@ -49,7 +48,6 @@ interface UseLoginFormReturn {
 // ----------------------------------------------------------------------
 
 export function useLoginForm(): UseLoginFormReturn {
-  const router = useRouter();
   const turnstileRef = useRef<TurnstileInstance | null>(null);
   const { setItem, getItem } = useLocalStorage();
 
@@ -82,7 +80,7 @@ export function useLoginForm(): UseLoginFormReturn {
         setItem("email", data.email);
         setItem("password", data.password);
       }
-      router.push(ROUTES.DASHBOARD.ROOT);
+      window.location.assign(`${APP_DOMAIN}${ROUTES.DASHBOARD.ROOT}`);
       reset();
       toast.success("Logged in successfully!");
     } catch (error) {

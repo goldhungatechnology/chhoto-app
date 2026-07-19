@@ -138,6 +138,3 @@ async def write_audit_event(
                 error="Failed to persist audit event",
                 internal_details=str(e),
             ) from e
-
-
-

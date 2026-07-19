@@ -11,4 +11,3 @@ class OnboardingRequestSchema(BaseSchema):
     full_name: str
     theme: Literal["light", "dark"]
     referral_source: DomainString
-
