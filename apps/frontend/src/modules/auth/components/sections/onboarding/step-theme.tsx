@@ -19,10 +19,10 @@ export default function StepTheme({
   return (
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white md:text-3xl">
           Choose your theme
         </h1>
-        <p className="text-[15px] text-slate-500">
+        <p className="text-[15px] text-slate-500 dark:text-slate-400">
           Select your theme preference. You can always change this later.
         </p>
       </div>
@@ -34,19 +34,19 @@ export default function StepTheme({
           className={`relative flex flex-col items-center gap-3 rounded-2xl border p-6 transition-all duration-300 cursor-pointer ${
             theme === "light"
               ? "border-primary bg-primary-soft/30 ring-1 ring-primary"
-              : "border-slate-200 bg-white hover:border-slate-350"
+              : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-350 dark:hover:border-slate-700"
           }`}
         >
           <div
             className={`flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-200 ${
               theme === "light"
                 ? "bg-primary text-white"
-                : "bg-slate-50 text-slate-500"
+                : "bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
             }`}
           >
             <Sun size={24} />
           </div>
-          <span className="font-semibold text-slate-800">Light</span>
+          <span className="font-semibold text-slate-800 dark:text-slate-200">Light</span>
           {theme === "light" && (
             <div className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white">
               <Check size={12} strokeWidth={3} />
@@ -60,19 +60,19 @@ export default function StepTheme({
           className={`relative flex flex-col items-center gap-3 rounded-2xl border p-6 transition-all duration-300 cursor-pointer ${
             theme === "dark"
               ? "border-primary bg-primary-soft/30 ring-1 ring-primary"
-              : "border-slate-200 bg-white hover:border-slate-350"
+              : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-350 dark:hover:border-slate-700"
           }`}
         >
           <div
             className={`flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-200 ${
               theme === "dark"
                 ? "bg-primary text-white"
-                : "bg-slate-50 text-slate-500"
+                : "bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
             }`}
           >
             <Moon size={24} />
           </div>
-          <span className="font-semibold text-slate-800">Dark</span>
+          <span className="font-semibold text-slate-800 dark:text-slate-200">Dark</span>
           {theme === "dark" && (
             <div className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white">
               <Check size={12} strokeWidth={3} />
@@ -88,7 +88,7 @@ export default function StepTheme({
           className={`h-12 w-full rounded-full text-[15px] font-semibold text-white shadow-none transition-all duration-300 ${
             isValid
               ? "bg-primary hover:bg-primary-hover hover:shadow-lg cursor-pointer"
-              : "bg-slate-200/80 text-slate-400 opacity-25 cursor-not-allowed pointer-events-none"
+              : "bg-slate-200/80 dark:bg-slate-800/80 text-slate-400 dark:text-slate-600 opacity-25 cursor-not-allowed pointer-events-none"
           }`}
         >
           Continue
@@ -96,7 +96,7 @@ export default function StepTheme({
 
         <button
           onClick={onSkip}
-          className="flex items-center justify-center gap-1.5 py-2 text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors duration-200 cursor-pointer self-center"
+          className="flex items-center justify-center gap-1.5 py-2 text-sm font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 cursor-pointer self-center"
         >
           Skip for now <ArrowRight size={14} />
         </button>

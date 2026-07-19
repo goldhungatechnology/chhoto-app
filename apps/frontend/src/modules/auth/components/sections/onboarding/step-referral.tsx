@@ -42,10 +42,10 @@ export default function StepReferral({
   return (
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300 w-full max-w-md">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white md:text-3xl">
           Where did you hear about us?
         </h1>
-        <p className="text-[15px] text-slate-500">
+        <p className="text-[15px] text-slate-500 dark:text-slate-400">
           Help us learn where you found us. We appreciate your feedback!
         </p>
       </div>
@@ -57,8 +57,8 @@ export default function StepReferral({
           onClick={() => setReferralSource("LinkedIn")}
           className={`relative flex items-center gap-3 rounded-xl border p-4 text-left transition-all duration-350 cursor-pointer ${
             referralSource === "LinkedIn"
-              ? "border-[#0A66C2] bg-[#0A66C2]/5 ring-1 ring-[#0A66C2]"
-              : "border-slate-200 bg-white hover:border-[#0A66C2]/30"
+              ? "border-[#0A66C2] bg-[#0A66C2]/5 dark:bg-[#0A66C2]/10 ring-1 ring-[#0A66C2]"
+              : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#0A66C2]/30 dark:hover:border-[#0A66C2]/50"
           }`}
         >
           <div
@@ -70,7 +70,7 @@ export default function StepReferral({
           >
             <LinkedinIcon width={18} height={18} />
           </div>
-          <span className="font-semibold text-slate-800 text-sm">LinkedIn</span>
+          <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm">LinkedIn</span>
         </button>
 
         {/* ChatGPT */}
@@ -79,8 +79,8 @@ export default function StepReferral({
           onClick={() => setReferralSource("ChatGPT")}
           className={`relative flex items-center gap-3 rounded-xl border p-4 text-left transition-all duration-350 cursor-pointer ${
             referralSource === "ChatGPT"
-              ? "border-[#10A37F] bg-[#10A37F]/5 ring-1 ring-[#10A37F]"
-              : "border-slate-200 bg-white hover:border-[#10A37F]/30"
+              ? "border-[#10A37F] bg-[#10A37F]/5 dark:bg-[#10A37F]/10 ring-1 ring-[#10A37F]"
+              : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#10A37F]/30 dark:hover:border-[#10A37F]/50"
           }`}
         >
           <div
@@ -92,7 +92,7 @@ export default function StepReferral({
           >
             <ChatgptIcon width={18} height={18} />
           </div>
-          <span className="font-semibold text-slate-800 text-sm">ChatGPT</span>
+          <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm">ChatGPT</span>
         </button>
 
         {/* Instagram */}
@@ -101,8 +101,8 @@ export default function StepReferral({
           onClick={() => setReferralSource("Instagram")}
           className={`relative flex items-center gap-3 rounded-xl border p-4 text-left transition-all duration-350 cursor-pointer ${
             referralSource === "Instagram"
-              ? "border-[#D6249F] bg-[#D6249F]/5 ring-1 ring-[#D6249F]"
-              : "border-slate-200 bg-white hover:border-[#D6249F]/30"
+              ? "border-[#D6249F] bg-[#D6249F]/5 dark:bg-[#D6249F]/10 ring-1 ring-[#D6249F]"
+              : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#D6249F]/30 dark:hover:border-[#D6249F]/50"
           }`}
         >
           <div
@@ -114,7 +114,7 @@ export default function StepReferral({
           >
             <InstagramIcon width={18} height={18} />
           </div>
-          <span className="font-semibold text-slate-800 text-sm">Instagram</span>
+          <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm">Instagram</span>
         </button>
 
         {/* Others */}
@@ -123,8 +123,8 @@ export default function StepReferral({
           onClick={() => setReferralSource("Others")}
           className={`relative flex items-center gap-3 rounded-xl border p-4 text-left transition-all duration-350 cursor-pointer ${
             isOthersSelected
-              ? "border-[#7C3AED] bg-[#7C3AED]/5 ring-1 ring-[#7C3AED]"
-              : "border-slate-200 bg-white hover:border-[#7C3AED]/30"
+              ? "border-[#7C3AED] bg-[#7C3AED]/5 dark:bg-[#7C3AED]/10 ring-1 ring-[#7C3AED]"
+              : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#7C3AED]/30 dark:hover:border-[#7C3AED]/50"
           }`}
         >
           <div
@@ -136,13 +136,13 @@ export default function StepReferral({
           >
             <OthersIcon width={18} height={18} />
           </div>
-          <span className="font-semibold text-slate-800 text-sm">Others</span>
+          <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm">Others</span>
         </button>
       </div>
 
       {isOthersSelected && (
         <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-          <label htmlFor="other-source-input" className="text-sm font-semibold text-slate-750">
+          <label htmlFor="other-source-input" className="text-sm font-semibold text-slate-750 dark:text-slate-300">
             What others? Please specify:
           </label>
           <input
@@ -151,7 +151,7 @@ export default function StepReferral({
             value={otherText}
             onChange={handleOtherTextChange}
             placeholder="Friend, Google Search, Newsletter..."
-            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED]"
+            className="h-11 w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 text-sm font-medium text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-200 focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED]"
             autoFocus
           />
         </div>
@@ -164,7 +164,7 @@ export default function StepReferral({
           className={`h-12 w-full rounded-full text-[15px] font-semibold text-white shadow-none transition-all duration-300 ${
             isValid && !isSubmitting
               ? "bg-primary hover:bg-primary-hover hover:shadow-lg cursor-pointer"
-              : "bg-slate-200/80 text-slate-400 opacity-25 cursor-not-allowed pointer-events-none"
+              : "bg-slate-200/80 dark:bg-slate-800/80 text-slate-400 dark:text-slate-600 opacity-25 cursor-not-allowed pointer-events-none"
           }`}
         >
           {isSubmitting ? "Completing setup..." : "Complete Setup"}
@@ -173,7 +173,7 @@ export default function StepReferral({
         <button
           onClick={onSkip}
           disabled={isSubmitting}
-          className="flex items-center justify-center gap-1.5 py-2 text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors duration-200 cursor-pointer self-center disabled:opacity-40"
+          className="flex items-center justify-center gap-1.5 py-2 text-sm font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 cursor-pointer self-center disabled:opacity-40"
         >
           Skip for now <ArrowRight size={14} />
         </button>
