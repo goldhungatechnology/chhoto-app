@@ -76,6 +76,8 @@ services:
       args:
         NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+        AUTH_DOMAIN: ${FRONTEND_AUTH_DOMAIN}
+        APP_DOMAIN: ${FRONTEND_APP_DOMAIN}
     env_file:
       - ../apps/frontend/.env.staging
     ports:
