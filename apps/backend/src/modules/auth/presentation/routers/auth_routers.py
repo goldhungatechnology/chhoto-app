@@ -93,7 +93,10 @@ async def signup(request: Request, body: SignupRequestSchema, session: AsyncSess
         )
         return get_cookie_response(
             cookies={
-                "session_uuid": {"value": payload["session_uuid"]},
+                "session_uuid": {
+                    "value": payload["session_uuid"],
+                    "max_age": config.USER_SESSION_EXPIRE_MINUTES,
+                },
             },
             response=response,
         )
@@ -128,7 +131,10 @@ async def login(request: Request, body: LoginRequestSchema, session: AsyncSessio
         response = cr.success(message="User logged in successfully")
         return get_cookie_response(
             cookies={
-                "session_uuid": {"value": payload["session_uuid"]},
+                "session_uuid": {
+                    "value": payload["session_uuid"],
+                    "max_age": config.USER_SESSION_EXPIRE_MINUTES,
+                },
             },
             response=response,
         )

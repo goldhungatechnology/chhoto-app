@@ -20,6 +20,7 @@ def on_forgot_password_link_created(event: ForgotPasswordLinkCreatedEvent):
         },
         email=event.email,
         link=event.link,
+        username=event.username,
     )
 
 

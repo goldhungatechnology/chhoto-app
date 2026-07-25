@@ -114,6 +114,7 @@ async def test_execute_publishes_forgot_password_link_created_event(
 
         assert isinstance(published_event, ForgotPasswordLinkCreatedEvent)
         assert published_event.email == "test@example.com"
+        assert published_event.username == "testuser"
         assert (
             published_event.link
             == f"{config.FRONTEND_URL}/auth/set-password?token=raw_token"

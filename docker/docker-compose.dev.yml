@@ -37,7 +37,7 @@ services:
         condition: service_healthy
       redis_dev:
         condition: service_healthy
-    command: uv run uvicorn src.main:create_app --host 0.0.0.0 --port 8000 --reload --factory
+    command: uvicorn src.main:create_app --host 0.0.0.0 --port 8000 --reload --factory
 
   background_worker:
     extends:
@@ -53,12 +53,14 @@ services:
         condition: service_healthy
       redis_dev:
         condition: service_healthy
-    command: uv run dramatiq src.shared.infrastructure.tasks.registry
+    command: dramatiq src.shared.infrastructure.tasks.registry
 
   frontend:
     extends:
       file: docker-compose.base.yml
       service: frontend
+    build:
+      target: development
     container_name: chhoto_frontend_dev
     env_file:
       - ../apps/frontend/.env.local

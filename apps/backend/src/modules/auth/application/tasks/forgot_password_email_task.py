@@ -1,12 +1,27 @@
+from pathlib import Path
+
 from src.shared.infrastructure.background_task_manager import bgtask
 from src.shared.infrastructure.logger import logger
-from src.shared.infrastructure.notification import NotificationFactory
+from src.shared.infrastructure.notification import NotificationFactory, InlineImage
 from src.shared.infrastructure.notification.adapter.email.email_notification import (
     EmailNotificationMessage,
 )
 
+LOGO_PATH = (
+    Path(__file__).parent.parent.parent.parent.parent
+    / "templates"
+    / "auth"
+    / "chhoto-logo.png"
+)
 
-async def _send_forgot_password_email(*, email: str, link: str) -> None:
+
+def _logo_inline_image() -> InlineImage:
+    return InlineImage(cid="chhoto-logo", file_path=LOGO_PATH, mime_type="image/png")
+
+
+async def _send_forgot_password_email(
+    *, email: str, link: str, username: str = ""
+) -> None:
     """
     Background task to send a forgot password email to the user.
     """
@@ -18,14 +33,16 @@ async def _send_forgot_password_email(*, email: str, link: str) -> None:
     try:
         notification = NotificationFactory.create(n_type="email")
         message = EmailNotificationMessage(
-            subject="Password Reset Link",
+            subject="Reset Your Password - Chhoto URL",
             template_name="auth/forgot_password.html",
-            context={"link": link},
+            context={"link": link, "username": username},
             recipient=[email],
+            email_from="noreply@chhoto.tech",
+            inline_images=[_logo_inline_image()],
         )
         await notification.send(message)
         logger.success(
-            "[Auth-Email] Successfully sent forgot password  email to %s", email
+            "[Auth-Email] Successfully sent forgot password email to %s", email
         )
 
     except Exception as e:

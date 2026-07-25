@@ -4,20 +4,16 @@ from fastapi import APIRouter, Depends
 from fastapi.requests import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.utils.response import (
-    CustomSuccessResponseSchema,
-    CustomResponse as cr,
-    get_cookie_response,
-)
+from src.core.config.settings import config
+from src.core.utils.response import CustomResponse as cr
+from src.core.utils.response import CustomSuccessResponseSchema, get_cookie_response
 from src.modules.auth.application.usecases.mfa.confirm_mfa_usecase import (
     ConfirmMFAUseCase,
 )
 from src.modules.auth.application.usecases.mfa.disable_mfa_usecase import (
     DisableMFAUseCase,
 )
-from src.modules.auth.application.usecases.mfa.setup_mfa_usecase import (
-    SetupMFAUseCase,
-)
+from src.modules.auth.application.usecases.mfa.setup_mfa_usecase import SetupMFAUseCase
 from src.modules.auth.application.usecases.mfa.verify_mfa_usecase import (
     VerifyMFAUseCase,
 )
@@ -130,7 +126,10 @@ async def verify_mfa(
     response = cr.success(message="MFA verified successfully. User logged in.")
     return get_cookie_response(
         cookies={
-            "session_uuid": {"value": payload["session_uuid"]},
+            "session_uuid": {
+                "value": payload["session_uuid"],
+                "max_age": config.USER_SESSION_EXPIRE_MINUTES,
+            },
         },
         response=response,
     )

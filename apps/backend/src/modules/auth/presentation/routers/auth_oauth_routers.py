@@ -1,14 +1,12 @@
 from typing import Annotated, Literal
+
 from fastapi import APIRouter, Depends
 from fastapi.requests import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.config.settings import config
-from src.core.utils.response import (
-    CustomSuccessResponseSchema,
-    CustomResponse as cr,
-    get_cookie_response,
-)
+from src.core.utils.response import CustomResponse as cr
+from src.core.utils.response import CustomSuccessResponseSchema, get_cookie_response
 from src.modules.auth.application.usecases.oauth.authenticate_user_oauth_usecase import (
     AuthenticatUserOAuthUseCase,
 )
@@ -17,8 +15,8 @@ from src.modules.auth.application.usecases.oauth.begin_oauth_usecase import (
 )
 from src.modules.auth.auth_container import get_auth_container
 from src.modules.auth.infrastructure.uow.auth_uow import AuthUOW
-from src.shared.infrastructure.logger import logger
 from src.shared.infrastructure.db import get_async_session
+from src.shared.infrastructure.logger import logger
 
 public_router = APIRouter()
 
@@ -82,7 +80,10 @@ async def oauth_callback(
                     response = cr.redirect(url=config.OAUTH_SUCCESS_REDIRECT_URL)
                     return get_cookie_response(
                         cookies={
-                            "session_uuid": {"value": payload["session_uuid"]},
+                            "session_uuid": {
+                                "value": payload["session_uuid"],
+                                "max_age": config.USER_SESSION_EXPIRE_MINUTES,
+                            },
                         },
                         response=response,
                     )
@@ -91,7 +92,10 @@ async def oauth_callback(
                     response = cr.redirect(url=config.OAUTH_SUCCESS_REDIRECT_URL)
                     return get_cookie_response(
                         cookies={
-                            "session_uuid": {"value": payload["session_uuid"]},
+                            "session_uuid": {
+                                "value": payload["session_uuid"],
+                                "max_age": config.USER_SESSION_EXPIRE_MINUTES,
+                            },
                         },
                         response=response,
                     )

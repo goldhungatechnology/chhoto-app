@@ -51,6 +51,7 @@ class ForgotPasswordUseCase:
                 ForgotPasswordLinkCreatedEvent(
                     email=user.email,
                     link=forgot_password_link,
+                    username=user.username,
                 )
             )
 

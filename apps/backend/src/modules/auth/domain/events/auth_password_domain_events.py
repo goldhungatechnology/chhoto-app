@@ -11,6 +11,7 @@ class ForgotPasswordLinkCreatedEvent(DomainEvent):
 
     email: str
     link: str
+    username: str = ""
 
 
 @dataclass(kw_only=True, frozen=True)

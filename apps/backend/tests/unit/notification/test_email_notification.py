@@ -58,6 +58,7 @@ async def test_email_notification_sends_via_resolved_provider():
             template_name="dummy_template.html",
             context={"name": "Test User"},
             recipient=["recipient@example.com"],
+            email_from="sender@example.com",
         )
 
         await notification.send(message)
@@ -75,6 +76,7 @@ async def test_email_notification_sends_via_resolved_provider():
             recipients=["recipient@example.com"],
             subject="Test Subject",
             html_body="<html>Hello Test</html>",
+            inline_images=[],
         )
 
 
@@ -162,3 +164,22 @@ async def test_resend_provider_calls_resend_sdk():
                 "html": "<strong>it works!</strong>",
             }
         )
+
+
+def test_forgot_password_template_renders_successfully():
+    """
+    Test that forgot_password.html template renders cleanly with Jinja2.
+    """
+    from src.shared.infrastructure.notification.adapter.email.email_notification import (
+        _jinja_env,
+    )
+
+    template = _jinja_env.get_template("auth/forgot_password.html")
+    rendered = template.render(
+        link="https://example.com/auth/set-password?token=123", username="johndoe"
+    )
+
+    assert "Reset Your Password" in rendered
+    assert "https://example.com/auth/set-password?token=123" in rendered
+    assert "johndoe" in rendered
+    assert "cid:chhoto-logo" in rendered
