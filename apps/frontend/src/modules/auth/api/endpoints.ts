@@ -10,4 +10,11 @@ export const ENDPOINTS = {
   PROFILE: "/auth/profile",
   LOGOUT: "/auth/logout",
   INTERFACE: "/auth/interface",
+  MFA_SETUP: "/auth/mfa/setup",
+  MFA_CONFIRM: "/auth/mfa/confirm",
+  MFA_DISABLE: "/auth/mfa/disable",
+  MFA_VERIFY: "/auth/mfa/verify",
+  SESSIONS: "/auth/sessions",
+  SESSIONS_REVOKE: "/auth/sessions/revoke",
+  SESSIONS_REVOKE_ALL: "/auth/sessions/revoke-all",
 } as const;

@@ -19,3 +19,10 @@ export { useUpdateProfile } from "./use-update-profile";
 export { useUpdateInterface } from "./use-update-interface";
 
 export { useLogout } from "./use-logout";
+export { useSetupMfa } from "./use-setup-mfa";
+export { useConfirmMfa } from "./use-confirm-mfa";
+export { useDisableMfa } from "./use-disable-mfa";
+export { useVerifyMfa } from "./use-verify-mfa";
+export { useSessions } from "./use-sessions";
+export { useRevokeSession } from "./use-revoke-session";
+export { useRevokeAllSessions } from "./use-revoke-all-sessions";

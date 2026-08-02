@@ -1,3 +1,5 @@
+"use client";
+
 import { ResetPasswordSection } from "@/modules/auth/components";
 
 export default function ResetPasswordView() {

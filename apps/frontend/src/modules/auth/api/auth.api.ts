@@ -27,6 +27,18 @@ import type {
   UpdateProfileResponse,
   InterfaceSetupRequest,
   InterfaceSetupResponse,
+  SetupMfaResponse,
+  ConfirmMfaRequest,
+  ConfirmMfaResponse,
+  DisableMfaRequest,
+  DisableMfaResponse,
+  VerifyMfaRequest,
+  VerifyMfaResponse,
+  SessionsResponse,
+  RevokeSessionRequest,
+  RevokeSessionResponse,
+  RevokeAllSessionsRequest,
+  RevokeAllSessionsResponse,
 } from "./auth.types";
 
 import { ENDPOINTS } from "./endpoints";
@@ -107,5 +119,43 @@ export class AuthApi {
 
   logout = (): Promise<void> => {
     return this.client.post<void>(ENDPOINTS.LOGOUT);
+  };
+
+  setupMfa = (): Promise<SetupMfaResponse> => {
+    return this.client.post<SetupMfaResponse>(ENDPOINTS.MFA_SETUP);
+  };
+
+  confirmMfa = (payload: ConfirmMfaRequest): Promise<ConfirmMfaResponse> => {
+    return this.client.post<ConfirmMfaResponse>(ENDPOINTS.MFA_CONFIRM, payload);
+  };
+
+  disableMfa = (payload: DisableMfaRequest): Promise<DisableMfaResponse> => {
+    return this.client.post<DisableMfaResponse>(ENDPOINTS.MFA_DISABLE, payload);
+  };
+
+  verifyMfa = (payload: VerifyMfaRequest): Promise<VerifyMfaResponse> => {
+    return this.client.post<VerifyMfaResponse>(ENDPOINTS.MFA_VERIFY, payload);
+  };
+
+  getSessions = (): Promise<SessionsResponse> => {
+    return this.client.get<SessionsResponse>(ENDPOINTS.SESSIONS);
+  };
+
+  revokeSession = (
+    payload: RevokeSessionRequest,
+  ): Promise<RevokeSessionResponse> => {
+    return this.client.post<RevokeSessionResponse>(
+      ENDPOINTS.SESSIONS_REVOKE,
+      payload,
+    );
+  };
+
+  revokeAllSessions = (
+    payload: RevokeAllSessionsRequest,
+  ): Promise<RevokeAllSessionsResponse> => {
+    return this.client.post<RevokeAllSessionsResponse>(
+      ENDPOINTS.SESSIONS_REVOKE_ALL,
+      payload,
+    );
   };
 }

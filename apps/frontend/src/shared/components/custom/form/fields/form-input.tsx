@@ -1,3 +1,5 @@
+"use client";
+
 import { Controller, useFormContext } from "react-hook-form";
 import { Input } from "@/shared/components/ui/input";
 import {

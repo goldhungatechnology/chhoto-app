@@ -9,16 +9,14 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <AuthGuard>
-        <SidebarProvider>
-          <AppSidebar />
-          <div className="flex flex-col w-full">
-            <Navbar />
-            {children}
-          </div>
-        </SidebarProvider>
-      </AuthGuard>
-    </>
+    <AuthGuard>
+      <SidebarProvider>
+        <AppSidebar />
+        <div className="flex flex-col w-full">
+          <Navbar />
+          {children}
+        </div>
+      </SidebarProvider>
+    </AuthGuard>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { FormInput, FormPasswordInput } from "./fields";
 
 export const Field = {
