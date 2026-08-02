@@ -177,3 +177,24 @@
     @apply font-sans;
   }
 }
+
+@keyframes top-loader-fill {
+  0% {
+    width: 0%;
+  }
+  70% {
+    width: 85%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes top-loader-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

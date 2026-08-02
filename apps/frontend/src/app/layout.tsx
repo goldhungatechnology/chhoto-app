@@ -10,6 +10,7 @@ import { Snackbar } from "@/shared/components/custom/snackbar";
 import { ThemeProvider } from "@/shared/components/custom/theme-provider";
 import { ThemeSync } from "@/shared/components/custom/theme-sync";
 import { BetaNotice } from "@/shared/components/custom/beta-notice";
+import { TopLoader } from "@/shared/components/custom/top-loader";
 
 import "./globals.css";
 
@@ -63,6 +64,7 @@ export default function RootLayout({
         >
           <ServerStateProvider>
             <ThemeSync />
+            <TopLoader />
             {children}
           </ServerStateProvider>
           <Snackbar />

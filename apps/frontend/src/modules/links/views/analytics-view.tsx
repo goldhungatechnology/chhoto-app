@@ -18,7 +18,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/shared/components/ui/button";
-import { useLinks } from "../api/hooks";
+import { useCountUp } from "@/shared/hooks";
+import { useLinks, useAnalyticsOverview } from "../api/hooks";
 import { LinkData } from "../types";
 import { toast } from "@/shared/components/custom/snackbar";
 import {
@@ -27,7 +28,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
-import { EditTitleModal, LinkSessionsDrawer } from "../components/blocks";
+import {
+  EditTitleModal,
+  LinkSessionsDrawer,
+  AnalyticsCharts,
+} from "../components/blocks";
 import { REDIRECT_DOMAIN } from "@/core/config";
 
 interface StatCardProps {
@@ -39,6 +44,9 @@ interface StatCardProps {
 }
 
 function StatCard({ icon: Icon, label, value, sub, iconClass }: StatCardProps) {
+  const isNumeric = typeof value === "number";
+  const count = useCountUp(isNumeric ? value : 0);
+
   return (
     <div className="flex items-center gap-4 p-5 bg-card border border-border/60 rounded-3xl shadow-sm">
       <div
@@ -52,7 +60,7 @@ function StatCard({ icon: Icon, label, value, sub, iconClass }: StatCardProps) {
       <div className="min-w-0">
         <p className="text-xs font-semibold text-muted-foreground">{label}</p>
         <p className="text-xl font-extrabold tracking-tight text-foreground truncate">
-          {value}
+          {isNumeric ? count.toLocaleString() : value}
         </p>
         {sub && <p className="text-xs text-muted-foreground truncate">{sub}</p>}
       </div>
@@ -62,6 +70,7 @@ function StatCard({ icon: Icon, label, value, sub, iconClass }: StatCardProps) {
 
 export function AnalyticsView() {
   const { links, isLoadingLinks } = useLinks();
+  const { overview, isLoadingOverview } = useAnalyticsOverview(links);
   const [searchTerm, setSearchTerm] = React.useState("");
 
   // Modals / Drawer state
@@ -194,6 +203,11 @@ export function AnalyticsView() {
             iconClass="bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400"
           />
         </div>
+
+        {/* Charts */}
+        {links.length > 0 && (
+          <AnalyticsCharts overview={overview} loading={isLoadingOverview} />
+        )}
 
         {/* Table card */}
         <div className="border border-border/60 rounded-3xl overflow-hidden shadow-sm bg-white dark:bg-card">
