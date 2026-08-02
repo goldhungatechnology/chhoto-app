@@ -46,10 +46,13 @@ router = APIRouter()
 AsyncSessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 
-def _build_session_payload(session_obj, geoip) -> dict:
+def _build_session_payload(
+    session_obj, geoip, current_session_uuid: str | None = None
+) -> dict:
     """
     Serialize a session entity and enrich it with city/country resolved from
     the session's stored IP (in-memory GeoIP lookup; None when unavailable).
+    Also populates is_current if current_session_uuid is provided.
     """
     geo = geoip.lookup(getattr(session_obj, "ip_address", None))
     data = CurrentSessionResponseSchema.model_validate(session_obj).model_dump(
@@ -58,6 +61,9 @@ def _build_session_payload(session_obj, geoip) -> dict:
     data["city"] = geo.city if geo else None
     data["country"] = geo.country_name if geo else None
     data["country_code"] = geo.country_iso if geo else None
+    if current_session_uuid:
+        session_uuid = getattr(session_obj, "uuid", None)
+        data["is_current"] = session_uuid == current_session_uuid
     return data
 
 
@@ -129,7 +135,9 @@ async def get_current_session_details(
         geoip = auth_container.geoip_service()
 
     return cr.success(
-        data=_build_session_payload(session_details, geoip),
+        data=_build_session_payload(
+            session_details, geoip, current_session_uuid=request.state.session_uuid
+        ),
         message="Current session details retrieved successfully",
     )
 
@@ -154,7 +162,12 @@ async def list_all_sessions(
         geoip = auth_container.geoip_service()
 
     return cr.success(
-        data=[_build_session_payload(s, geoip) for s in sessions],
+        data=[
+            _build_session_payload(
+                s, geoip, current_session_uuid=request.state.session_uuid
+            )
+            for s in sessions
+        ],
         message="All sessions retrieved successfully",
     )
 

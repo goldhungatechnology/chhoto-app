@@ -2,7 +2,12 @@ from datetime import UTC, datetime
 
 from src.modules.auth.domain.entities.user_mfa_entity import UserMFAEntity
 from src.modules.auth.domain.repositories.user_mfa_repository import IUserMFARepository
-from src.shared.exceptions.base_exceptions import CreateError, ServerError, UpdateError
+from src.shared.exceptions.base_exceptions import (
+    CreateError,
+    DomainError,
+    ServerError,
+    UpdateError,
+)
 
 
 class UserMFADomainService:
@@ -13,19 +18,28 @@ class UserMFADomainService:
     def __init__(self, repository: IUserMFARepository):
         self.repository = repository
 
-    async def create_user_mfa(self, mfa_entity):
+    async def create_user_mfa(self, mfa_entity: UserMFAEntity) -> UserMFAEntity:
         """
-        create user mfa
+        create user mfa or update existing unverified mfa setup
         """
         try:
             already_exists = await self.get_user_mfa_by_user_id(mfa_entity.user_id)
             if already_exists:
-                raise CreateError(
-                    "User MFA already exists for this user ID",
-                    internal_details=f"User ID: {mfa_entity.user_id}",
-                )
+                if already_exists.verified_at is not None:
+                    raise CreateError(
+                        "MFA is already enabled for this account",
+                        internal_details=f"User ID: {mfa_entity.user_id}",
+                    )
+                # Existing setup is unverified; update secret and auth_url to allow retry/re-setup
+                already_exists.secret = mfa_entity.secret
+                already_exists.auth_url = mfa_entity.auth_url
+                already_exists.mark_updated()
+                return await self.repository.update(already_exists)
+
             created_mfa = await self.repository.add(mfa_entity)
             return created_mfa
+        except DomainError:
+            raise
         except Exception as e:
             raise CreateError(
                 "Failed to create user MFA", internal_details=str(e)

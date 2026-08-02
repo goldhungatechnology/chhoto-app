@@ -37,6 +37,20 @@ class SetupMFAUseCase:
                 secret=secret, email=user.email
             )
 
+            already_mfa_setup = (
+                await self.user_mfa_domain_service.get_user_mfa_by_user_id(user.id)
+            )
+
+            if already_mfa_setup and already_mfa_setup.verified_at is not None:
+                already_mfa_setup.secret = secret
+                already_mfa_setup.auth_url = auth_url
+                already_mfa_setup.mark_updated()
+
+                return {
+                    "secret": already_mfa_setup.secret,
+                    "auth_url": already_mfa_setup.auth_url,
+                }
+
             mfa_entity = UserMFAEntity(
                 user_id=user.id,
                 secret=secret,

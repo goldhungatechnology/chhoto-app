@@ -21,6 +21,7 @@ from src.modules.auth.auth_container import get_auth_container
 from src.modules.auth.infrastructure.uow.auth_uow import AuthUOW
 from src.modules.auth.presentation.schemas.auth_mfa_schemas import (
     ConfirmMFARequestSchema,
+    ConfirmMFAResponseSchema,
     DisableMFARequestSchema,
     SetupMFAResponseSchema,
     VerifyMFARequestSchema,
@@ -66,23 +67,29 @@ async def setup_mfa(request: Request, session: AsyncSessionDep):
     )
 
 
-@protected_router.post("/mfa/confirm", response_model=CustomSuccessResponseSchema)
+@protected_router.post(
+    "/mfa/confirm",
+    response_model=CustomSuccessResponseSchema[ConfirmMFAResponseSchema],
+)
 async def confirm_mfa(
     request: Request, body: ConfirmMFARequestSchema, session: AsyncSessionDep
 ):
     """
     Confirm (enable) Multi-Factor Authentication by verifying the TOTP code
-    from the authenticator app.
+    from the authenticator app. Returns emergency recovery codes.
     """
     async with AuthUOW(session):
         auth_container = get_auth_container(session)
         confirm_mfa_usecase: ConfirmMFAUseCase = auth_container.confirm_mfa_usecase()
-        await confirm_mfa_usecase.execute(
+        payload = await confirm_mfa_usecase.execute(
             user_id=request.state.user_id,
             otp_code=body.otp_code,
         )
 
-    return cr.success(message="MFA enabled successfully.")
+    return cr.success(
+        data=ConfirmMFAResponseSchema(**payload).model_dump(),
+        message="MFA enabled successfully. Store your recovery codes securely.",
+    )
 
 
 @protected_router.post("/mfa/disable", response_model=CustomSuccessResponseSchema)
@@ -118,6 +125,7 @@ async def verify_mfa(
         payload = await verify_mfa_usecase.execute(
             temp_token=body.temp_token,
             otp_code=body.otp_code,
+            recovery_code=body.recovery_code,
             ip_address=request.state.ip_address,
             device=request.state.device,
             browser=request.state.browser,

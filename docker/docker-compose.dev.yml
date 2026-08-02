@@ -32,6 +32,7 @@ services:
       - "8000:8000"
     volumes:
       - ../apps/backend:/app
+      - ../apps/packages/chhoto_encoding:/packages/chhoto_encoding
     depends_on:
       db_dev:
         condition: service_healthy
@@ -48,6 +49,7 @@ services:
       - ../apps/backend/env/.env.development
     volumes:
       - ../apps/backend:/app
+      - ../apps/packages/chhoto_encoding:/packages/chhoto_encoding
     depends_on:
       db_dev:
         condition: service_healthy

@@ -22,7 +22,7 @@ class UserMFAModel(BaseModel, AuditMixinModel):
 
     ##Optional fields
     auth_url: Mapped[str | None] = mapped_column(
-        String(255), nullable=True, default=None
+        String(1024), nullable=True, default=None
     )
     verified_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True, default=None

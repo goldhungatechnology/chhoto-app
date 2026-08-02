@@ -30,6 +30,7 @@ class CurrentSessionResponseSchema(BaseSchema):
     city: str | None = None
     country: str | None = None
     country_code: str | None = None
+    is_current: bool = False
     created_at: datetime | None = None
 
     expires_at: datetime | None = None
@@ -38,6 +39,14 @@ class CurrentSessionResponseSchema(BaseSchema):
     model_config = {
         "from_attributes": True,
     }
+
+    @computed_field
+    @property
+    def session_uuid(self) -> str:
+        """
+        alias session_uuid for frontend compatibility
+        """
+        return self.uuid
 
     @computed_field
     @property

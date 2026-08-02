@@ -72,6 +72,9 @@ from src.modules.auth.domain.services.user_domain_service import UserDomainServi
 from src.modules.auth.domain.services.user_mfa_domain_service import (
     UserMFADomainService,
 )
+from src.modules.auth.domain.services.user_mfa_recovery_domain_service import (
+    UserMFARecoveryDomainService,
+)
 from src.modules.auth.domain.services.user_onboarding_domain_service import (
     UserOnboardingDomainService,
 )
@@ -87,6 +90,9 @@ from src.modules.auth.infrastructure.email_validator.email_validator_impl import
 )
 from src.modules.auth.infrastructure.repositories.user_account_repository_impl import (
     UserAccountRepositoryImpl,
+)
+from src.modules.auth.infrastructure.repositories.user_mfa_recovery_repository_impl import (
+    UserMFARecoveryRepositoryImpl,
 )
 from src.modules.auth.infrastructure.repositories.user_mfa_repository_impl import (
     UserMFARepositoryImpl,
@@ -145,6 +151,9 @@ class AuthContainer(containers.DeclarativeContainer):
     )
     user_token_repository = providers.Factory(UserTokenRepositoryImpl, session=session)
     user_mfa_repository = providers.Factory(UserMFARepositoryImpl, session=session)
+    user_mfa_recovery_repository = providers.Factory(
+        UserMFARecoveryRepositoryImpl, session=session
+    )
     user_onboarding_repository = providers.Factory(
         UserOnboardingRepositoryImpl, session=session
     )
@@ -175,6 +184,11 @@ class AuthContainer(containers.DeclarativeContainer):
     user_mfa_domain_service = providers.Factory(
         UserMFADomainService,
         repository=user_mfa_repository,
+    )
+    user_mfa_recovery_domain_service = providers.Factory(
+        UserMFARecoveryDomainService,
+        repository=user_mfa_recovery_repository,
+        hasher_service=hasher_service,
     )
     user_onboarding_domain_service = providers.Factory(
         UserOnboardingDomainService,
@@ -317,6 +331,7 @@ class AuthContainer(containers.DeclarativeContainer):
     confirm_mfa_usecase = providers.Factory(
         ConfirmMFAUseCase,
         user_mfa_domain_service=user_mfa_domain_service,
+        user_mfa_recovery_domain_service=user_mfa_recovery_domain_service,
         totp_service=totp_service,
     )
 
@@ -330,6 +345,7 @@ class AuthContainer(containers.DeclarativeContainer):
     verify_mfa_usecase = providers.Factory(
         VerifyMFAUseCase,
         user_mfa_domain_service=user_mfa_domain_service,
+        user_mfa_recovery_domain_service=user_mfa_recovery_domain_service,
         user_session_domain_service=user_session_domain_service,
         totp_service=totp_service,
         token_service=token_service,

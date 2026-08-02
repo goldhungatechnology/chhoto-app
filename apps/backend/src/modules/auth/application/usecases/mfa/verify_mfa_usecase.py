@@ -3,6 +3,9 @@ from src.modules.auth.domain.entities.user_session_entity import UserSessionEnti
 from src.modules.auth.domain.services.user_mfa_domain_service import (
     UserMFADomainService,
 )
+from src.modules.auth.domain.services.user_mfa_recovery_domain_service import (
+    UserMFARecoveryDomainService,
+)
 from src.modules.auth.domain.services.user_session_domain_service import (
     UserSessionDomainService,
 )
@@ -18,17 +21,20 @@ from src.shared.infrastructure.token.token_service import TokenService
 class VerifyMFAUseCase:
     """
     Use case for verifying an MFA code during login.
-    Validates the temp_token, verifies the TOTP code, and creates a session.
+    Validates the temp_token, verifies the TOTP code or a single-use recovery
+    code, and creates a session.
     """
 
     def __init__(
         self,
         user_mfa_domain_service: UserMFADomainService,
+        user_mfa_recovery_domain_service: UserMFARecoveryDomainService,
         user_session_domain_service: UserSessionDomainService,
         totp_service: TOTPService,
         token_service: TokenService,
     ):
         self.user_mfa_domain_service = user_mfa_domain_service
+        self.user_mfa_recovery_domain_service = user_mfa_recovery_domain_service
         self.user_session_domain_service = user_session_domain_service
         self.totp_service = totp_service
         self.token_service = token_service
@@ -36,10 +42,11 @@ class VerifyMFAUseCase:
     async def execute(
         self,
         temp_token: str,
-        otp_code: str,
-        ip_address: str,
-        device: str,
-        browser: str,
+        otp_code: str | None = None,
+        recovery_code: str | None = None,
+        ip_address: str = "",
+        device: str = "",
+        browser: str = "",
     ) -> dict:
         """
         Executes the use case to verify MFA code during login.
@@ -70,11 +77,7 @@ class VerifyMFAUseCase:
                     errors={"mfa": "MFA not enabled"},
                 )
 
-            if not self.totp_service.verify_totp(mfa.secret, otp_code):
-                raise InvalidError(
-                    error="Invalid MFA code. Please try again.",
-                    errors={"otp_code": "Invalid MFA code"},
-                )
+            await self._verify_credentials(mfa, otp_code, recovery_code)
 
             session_entity = UserSessionEntity(
                 user_id=user_id,
@@ -108,3 +111,38 @@ class VerifyMFAUseCase:
             raise ServerError(
                 error="Failed to verify MFA code", internal_details=str(e)
             ) from e
+
+    async def _verify_credentials(
+        self,
+        mfa,
+        otp_code: str | None,
+        recovery_code: str | None,
+    ) -> None:
+        """
+        Validates the provided MFA credential. Exactly one of otp_code or
+        recovery_code must be present.
+        """
+        if recovery_code:
+            recovery_verified = (
+                await self.user_mfa_recovery_domain_service.verify_recovery_code(
+                    mfa_id=mfa.id, plain_code=recovery_code
+                )
+            )
+            if not recovery_verified:
+                raise InvalidError(
+                    error="Invalid recovery code. Please try again.",
+                    errors={"recovery_code": "Invalid recovery code"},
+                )
+            return
+
+        if not otp_code:
+            raise InvalidError(
+                error="Provide either a TOTP code or a recovery code.",
+                errors={"otp_code": "Missing MFA code"},
+            )
+
+        if not self.totp_service.verify_totp(mfa.secret, otp_code):
+            raise InvalidError(
+                error="Invalid MFA code. Please try again.",
+                errors={"otp_code": "Invalid MFA code"},
+            )

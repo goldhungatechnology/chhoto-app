@@ -4,6 +4,9 @@ from src.modules.auth.domain.events.auth_mfa_domain_events import (
 from src.modules.auth.domain.services.user_mfa_domain_service import (
     UserMFADomainService,
 )
+from src.modules.auth.domain.services.user_mfa_recovery_domain_service import (
+    UserMFARecoveryDomainService,
+)
 from src.modules.auth.infrastructure.totp.totp_service import TOTPService
 from src.shared.exceptions.base_exceptions import (
     DomainError,
@@ -16,20 +19,24 @@ from src.shared.mediator.mediator import mediator
 class ConfirmMFAUseCase:
     """
     Use case for confirming (enabling) MFA for a user.
-    Verifies the TOTP code against the stored secret and marks MFA as verified.
+    Verifies the TOTP code against the stored secret, marks MFA as verified,
+    and generates emergency recovery codes.
     """
 
     def __init__(
         self,
         user_mfa_domain_service: UserMFADomainService,
+        user_mfa_recovery_domain_service: UserMFARecoveryDomainService,
         totp_service: TOTPService,
     ):
         self.user_mfa_domain_service = user_mfa_domain_service
+        self.user_mfa_recovery_domain_service = user_mfa_recovery_domain_service
         self.totp_service = totp_service
 
     async def execute(self, user_id: int, otp_code: str) -> dict:
         """
         Executes the use case to confirm MFA for the user.
+        Returns verified status and generated recovery codes.
         """
         try:
             mfa = await self.user_mfa_domain_service.get_user_mfa_by_user_id(user_id)
@@ -51,11 +58,18 @@ class ConfirmMFAUseCase:
                     errors={"otp_code": "Invalid verification code"},
                 )
 
-            await self.user_mfa_domain_service.confirm_user_mfa(mfa)
+            confirmed_mfa = await self.user_mfa_domain_service.confirm_user_mfa(mfa)
+
+            recovery_codes = await self.user_mfa_recovery_domain_service.create_recovery_codes_for_mfa(
+                mfa_id=confirmed_mfa.id
+            )
 
             await mediator.publish(MFASetupCompletedEvent(user_id=user_id))
 
-            return {"verified": True}
+            return {
+                "verified": True,
+                "recovery_codes": recovery_codes,
+            }
 
         except DomainError:
             raise

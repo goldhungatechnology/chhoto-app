@@ -126,7 +126,7 @@ async def login(request: Request, body: LoginRequestSchema, session: AsyncSessio
         )
 
         if payload["mfa_required"]:
-            return cr.success(message="MFA is required", data=payload)
+            return cr.error(error="MFA is required", errors=payload)
 
         response = cr.success(message="User logged in successfully")
         return get_cookie_response(
