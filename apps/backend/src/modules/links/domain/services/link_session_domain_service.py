@@ -16,6 +16,9 @@ class LinkSessionDomainService:
     async def create_link_session(
         self, session_entity: LinkSessionEntity
     ) -> LinkSessionEntity:
+        """
+        Create a new link session in the repository.
+        """
         try:
             return await self.repository.add(session_entity)
         except Exception as e:
@@ -26,11 +29,14 @@ class LinkSessionDomainService:
     async def list_sessions_by_link_id(
         self, link_id: int, limit: int | None = None
     ) -> list[LinkSessionEntity]:
+        """
+        List sessions for a given link ID, optionally limited to the most recent
+        """
         try:
             if limit is not None:
                 return await self.repository.list_recent(link_id=link_id, limit=limit)
             return await self.repository.filter(link_id=link_id)
         except Exception as e:
             raise CreateError(
-                error="Failed to list link sessions", internal_details=str(e)
+                error=f"Failed to list link sessions {str(e)}", internal_details=str(e)
             ) from e

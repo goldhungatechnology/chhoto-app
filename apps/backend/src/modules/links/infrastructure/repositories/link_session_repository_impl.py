@@ -23,13 +23,24 @@ class LinkSessionRepositoryImpl(
 
     async def list_recent(self, link_id: int, limit: int) -> list[LinkSessionEntity]:
         stmt = (
-            select(LinkSessionModel)
+            select(
+                LinkSessionModel.id,
+                LinkSessionModel.uuid,
+                LinkSessionModel.link_id,
+                LinkSessionModel.ip_address,
+                LinkSessionModel.device,
+                LinkSessionModel.browser,
+                LinkSessionModel.referral_source,
+                LinkSessionModel.created_at,
+                LinkSessionModel.updated_at,
+            )
             .where(LinkSessionModel.link_id == link_id)
             .order_by(LinkSessionModel.created_at.desc())
             .limit(limit)
         )
+
         result = await self.session.execute(stmt)
-        return [self.to_entity(dict(row)) for row in result.mappings().all()]
+        return [self.to_entity(dict(row)) for row in result.mappings()]
 
     def to_row(self, entity: LinkSessionEntity) -> dict:
         return {
