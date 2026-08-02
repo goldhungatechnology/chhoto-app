@@ -8,10 +8,10 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // <AuthGuard>
-    <SidebarProvider>
-      <AppShell>{children}</AppShell>
-    </SidebarProvider>
-    // </AuthGuard>
+    <AuthGuard>
+      <SidebarProvider>
+        <AppShell>{children}</AppShell>
+      </SidebarProvider>
+    </AuthGuard>
   );
 }

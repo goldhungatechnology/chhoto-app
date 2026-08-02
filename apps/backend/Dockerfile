@@ -32,7 +32,7 @@ RUN apt-get update \
 
 
 COPY --from=BUILDER /usr/local/app /app
-COPY --from=BUILDER /packages /packages
+COPY --from=BUILDER /usr/local/packages /packages
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
 
