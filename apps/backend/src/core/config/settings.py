@@ -43,9 +43,9 @@ class Settings(BaseSettings):
     base settings class for entire application configuration
     """
 
-    APP_URL: str = "http://localhost:8080"
+    APP_URL: str = "http://localhost:8000"
     ENVIRONMENT: Environment = Environment.DEVELOPMENT
-    PROJECT_NAME: str = "chatboq"
+    PROJECT_NAME: str = "chhoto"
     SECRET_KEY: str = "your_default_secret_key"
 
     ## ---------------------------------------------- Database --------------------------------
@@ -83,19 +83,20 @@ class Settings(BaseSettings):
     RESEND_API_KEY: str | None = None
 
     ## ---------------------------------------------- File Storage --------------------------------
+    UPLOAD_PROVIDER: str = "cloudinary"
 
     ## ---- Cloudinary
     CLOUDINARY_CLOUD_NAME: str | None = None
     CLOUDINARY_API_KEY: str | None = None
     CLOUDINARY_API_SECRET: str | None = None
-    CLOUDINARY_FOLDER: str = "ems"
+    CLOUDINARY_FOLDER: str = "chhoto"
 
     ## ---- AWS S3
     AWS_S3_BUCKET: str | None = None
     AWS_S3_REGION: str | None = None
     AWS_ACCESS_KEY_ID: str | None = None
     AWS_SECRET_ACCESS_KEY: str | None = None
-    AWS_S3_FOLDER: str = "ems"
+    AWS_S3_FOLDER: str = "chhoto"
     AWS_S3_ENDPOINT_URL: str | None = None
     AWS_S3_PUBLIC_BASE_URL: str | None = None
 
@@ -128,23 +129,16 @@ class Settings(BaseSettings):
     GOOGLE_OAUTH_CLIENT_ID: str | None = None
     GOOGLE_OAUTH_CLIENT_SECRET: str | None = None
 
-    ## --------------------------------  Background Task --------------------------------
-
-    ## ---- outbox
-    OUTBOX_POLLER_AUTOSTART: bool = True
-    OUTBOX_POLLER_DELAY_INITIAL_SECONDS: int = 3
-    # Must be >= INITIAL: the poller uses randint(INITIAL, MAX) for backoff.
-    OUTBOX_POLLER_DELAY_MAX_SECONDS: int = 30
-
-    ## ---------------------------------------------- Auditing --------------------------------
+    ## --------------------------------  Auditing --------------------------------
     AUDIT_ENABLED: bool = True
     AUDIT_STRICT_MODE: bool = False
 
     ## ---------------------------------------------- Captcha --------------------------------
+    CAPTCHA_PROVIDER: str = "turnstile"
     TURNSTILE_SECRET_KEY: str = "1x0000000000000000000000000000000AA"
 
     ## ---------------------------------------------- Cookies --------------------------------
-    COOKIE_DOMAIN: str = "mydomain"
+    COOKIE_DOMAIN: str = "localhost"
 
     model_config = SettingsConfigDict(
         env_file=str(env_path), env_file_encoding="utf-8", frozen=True, extra="ignore"
@@ -161,7 +155,7 @@ class Settings(BaseSettings):
             insecure = {
                 "SECRET_KEY": "your_default_secret_key",
                 "DATABASE_URL": "your_default_database_url",
-                "COOKIE_DOMAIN": "mydomain",
+                "COOKIE_DOMAIN": "localhost",
             }
             offending = [
                 name

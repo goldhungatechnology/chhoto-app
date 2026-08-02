@@ -101,8 +101,6 @@ def get_cookie_response(
     for key, opts in cookies.items():
         value = opts["value"]
 
-        print("Cookie domain", config.COOKIE_DOMAIN)
-
         # environment defaults
         if config.is_local or config.is_testing or config.is_development:
             response.set_cookie(

@@ -7,6 +7,8 @@ import type {
   LinkData,
 } from "../types";
 
+import { ENDPOINTS } from "./endpoints";
+
 export class LinksApi {
   private client: Client;
 
@@ -15,11 +17,11 @@ export class LinksApi {
   }
 
   createLink = (payload: CreateLinkRequest): Promise<CreateLinkResponse> => {
-    return this.client.post<CreateLinkResponse>("/links/", payload);
+    return this.client.post<CreateLinkResponse>(ENDPOINTS.CREATE, payload);
   };
 
   listLinks = (): Promise<ListLinksResponse> => {
-    return this.client.get<ListLinksResponse>("/links/");
+    return this.client.get<ListLinksResponse>(ENDPOINTS.LIST);
   };
 
   updateLink = (
@@ -27,7 +29,7 @@ export class LinksApi {
     payload: { title: string | null },
   ): Promise<{ data: LinkData; message: string }> => {
     return this.client.patch<{ data: LinkData; message: string }>(
-      `/links/${linkUuid}`,
+      ENDPOINTS.UPDATE(linkUuid),
       payload,
     );
   };
@@ -36,7 +38,7 @@ export class LinksApi {
     linkUuid: string,
   ): Promise<ListLinkSessionsResponse> => {
     return this.client.get<ListLinkSessionsResponse>(
-      `/links/sessions/${linkUuid}`,
+      ENDPOINTS.SESSIONS(linkUuid),
     );
   };
 }

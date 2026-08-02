@@ -27,12 +27,14 @@ class ListLinkSessionsUseCase:
         self,
         link_uuid: str,
         user_id: int,
+        limit: int | None = None,
     ) -> list[LinkSessionEntity]:
         """
-        Execute the use case to list all sessions for a given link UUID.
+        Execute the use case to list sessions for a given link UUID.
 
         1. Resolves the link UUID to a link entity and verifies ownership.
-        2. Retrieves all sessions associated with that link's ID.
+        2. Retrieves the sessions associated with that link's ID, newest first
+           and bounded by ``limit`` when provided.
         """
         try:
             link = await self.link_domain_service.get_link_by_uuid(link_uuid)
@@ -50,7 +52,7 @@ class ListLinkSessionsUseCase:
                 )
 
             return await self.link_session_domain_service.list_sessions_by_link_id(
-                link.id
+                link.id, limit=limit
             )
         except DomainError:
             raise

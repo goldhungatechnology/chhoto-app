@@ -15,12 +15,5 @@ export const ROUTES = {
 
   DASHBOARD: {
     ROOT: "/dashboard",
-
-    SETTINGS: {
-      ROOT: "/settings",
-      ACCOUNT: "/settings/account",
-      SECURITY: "/settings/security",
-      APPEARANCE: "/settings/appearance",
-    },
   },
 } as const;

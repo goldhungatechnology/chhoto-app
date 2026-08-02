@@ -75,7 +75,6 @@ interface UseCreateLinkFormReturn {
   methods: UseFormReturn<CreateLinkFormValues>;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   isSubmitting: boolean;
-  successData: LinkData | null;
   resetForm: () => void;
 }
 
@@ -172,7 +171,6 @@ export function useCreateLinkForm(
     methods,
     onSubmit: handleSubmit(onSubmitHandler),
     isSubmitting: isCreatingLink,
-    successData: null,
     resetForm: () => reset(defaultValues),
   };
 }

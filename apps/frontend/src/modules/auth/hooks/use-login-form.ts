@@ -17,7 +17,7 @@ import { ROUTES, APP_DOMAIN } from "@/core/config";
 
 import { useLogin, useVerifyMfa } from "@/modules/auth/api/hooks";
 import type { VerifyMfaRequest } from "@/modules/auth/api/auth.types";
-import useLocalStorage from "@/shared/hooks/use-localstorage";
+import { localStorageAdapter, STORAGE_KEYS } from "@/core/local-storage";
 
 // ----------------------------------------------------------------------
 
@@ -60,7 +60,6 @@ export interface UseLoginFormReturn {
 
 export function useLoginForm(): UseLoginFormReturn {
   const turnstileRef = useRef<TurnstileInstance | null>(null);
-  const { setItem, getItem } = useLocalStorage();
 
   const [mfaRequired, setMfaRequired] = useState(false);
   const [tempToken, setTempToken] = useState("");
@@ -84,16 +83,24 @@ export function useLoginForm(): UseLoginFormReturn {
   const { reset, handleSubmit, setValue, control } = methods;
 
   useEffect(() => {
-    const email = getItem("email") || "";
-    const password = getItem("password") || "";
-    const rememberMe = !!(email && password);
-
-    if (email || password || rememberMe) {
-      reset({ email, password, captcha_token: "", rememberMe });
+    // Never persist passwords; clear any that older versions may have saved.
+    localStorageAdapter.removeItem("password");
+    const email =
+      localStorageAdapter.getItem<string>(STORAGE_KEYS.REMEMBER_EMAIL) || "";
+    if (email) {
+      reset({ email, password: "", captcha_token: "", rememberMe: true });
     }
-  }, [getItem, reset]);
+  }, [reset]);
 
   const turnstileToken = useWatch({ control, name: "captcha_token" }) || "";
+
+  const persistEmail = (rememberMe: boolean, email: string) => {
+    if (rememberMe) {
+      localStorageAdapter.setItem(STORAGE_KEYS.REMEMBER_EMAIL, email);
+    } else {
+      localStorageAdapter.removeItem(STORAGE_KEYS.REMEMBER_EMAIL);
+    }
+  };
 
   const onSubmitHandler: SubmitHandler<LoginFormValues> = async (
     data: LoginFormValues,
@@ -105,23 +112,18 @@ export function useLoginForm(): UseLoginFormReturn {
       if (res?.data?.mfa_required && res?.data?.temp_token) {
         setTempToken(res.data.temp_token);
         setMfaRequired(true);
-        if (rememberMe) {
-          setItem("email", data.email);
-          setItem("password", data.password);
-        }
+        persistEmail(rememberMe, data.email);
         toast.success("Password verified. Please enter your MFA code.");
         return;
       }
 
-      if (rememberMe) {
-        setItem("email", data.email);
-        setItem("password", data.password);
-      }
+      persistEmail(rememberMe, data.email);
       window.location.assign(`${APP_DOMAIN}${ROUTES.DASHBOARD.ROOT}`);
       reset();
       toast.success("Logged in successfully!");
     } catch (error) {
       const apiError = error as {
+        message?: string;
         errors?: Record<string, unknown>;
         error?: string;
       };
@@ -134,10 +136,7 @@ export function useLoginForm(): UseLoginFormReturn {
       ) {
         setTempToken(errors.temp_token);
         setMfaRequired(true);
-        if (data.rememberMe) {
-          setItem("email", data.email);
-          setItem("password", data.password);
-        }
+        persistEmail(data.rememberMe, data.email);
         toast.success("Password verified. Please enter your MFA code.");
       } else if (errors) {
         Object.entries(errors).forEach(([key, value]) => {
@@ -148,11 +147,7 @@ export function useLoginForm(): UseLoginFormReturn {
         });
       } else {
         const errorMessage =
-          typeof error === "string"
-            ? error
-            : error instanceof Error
-              ? error.message
-              : apiError?.error || "Login failed. Please try again.";
+          apiError?.message || apiError?.error || "Login failed. Please try again.";
         toast.error(errorMessage);
       }
     } finally {

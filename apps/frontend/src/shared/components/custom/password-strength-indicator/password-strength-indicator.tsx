@@ -1,5 +1,5 @@
 import { usePasswordStrength } from "@/shared/hooks/use-password-strength";
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/lib/utils";
 import { type PasswordStrengthResult } from "@/shared/lib/password-strength";
 
 const strengthColors: Record<string, string> = {

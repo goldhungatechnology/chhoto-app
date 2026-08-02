@@ -5,7 +5,7 @@ import { Turnstile } from "@marsidev/react-turnstile";
 
 import { Button } from "@/shared/components/ui/button";
 
-import { TURN_STILE_SITE_KEY } from "@/core/config";
+import { TURNSTILE_SITE_KEY } from "@/core/config";
 
 import { OAuthProviders, RegisterFormHeader } from "../primitives";
 import RegisterFormFields from "./register-form-fields";
@@ -40,7 +40,7 @@ export default function RegisterForm() {
 
           <Turnstile
             ref={turnstileRef}
-            siteKey={TURN_STILE_SITE_KEY || ""}
+            siteKey={TURNSTILE_SITE_KEY || ""}
             // options={{ size: "invisible" }}
             onSuccess={onCaptchaSuccess}
             onExpire={onCaptchaExpire}

@@ -2,7 +2,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Button } from "@/shared/components/ui/button";
 
 import { API_BASE_URL } from "@/core/config/api";
-import Google from "../../../../../public/assets/icons/google";
+import Google from "@/modules/auth/components/icons/google";
 
 // ----------------------------------------------------------------------
 

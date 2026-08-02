@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.modules.links.domain.entities.link_session_entity import LinkSessionEntity
@@ -19,6 +20,16 @@ class LinkSessionRepositoryImpl(
         self.session = session
         self.table_name = LinkSessionModel.__tablename__
         super().__init__(session, self.table_name)
+
+    async def list_recent(self, link_id: int, limit: int) -> list[LinkSessionEntity]:
+        stmt = (
+            select(LinkSessionModel)
+            .where(LinkSessionModel.link_id == link_id)
+            .order_by(LinkSessionModel.created_at.desc())
+            .limit(limit)
+        )
+        result = await self.session.execute(stmt)
+        return [self.to_entity(dict(row)) for row in result.mappings().all()]
 
     def to_row(self, entity: LinkSessionEntity) -> dict:
         return {

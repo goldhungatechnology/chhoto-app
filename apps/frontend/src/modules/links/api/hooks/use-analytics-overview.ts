@@ -76,14 +76,33 @@ const aggregateSessions = (sessions: LinkSession[]): AnalyticsOverview => {
   };
 };
 
+const mapLimit = async <T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T) => Promise<R>,
+): Promise<R[]> => {
+  const results = new Array<R>(items.length);
+  let index = 0;
+
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (index < items.length) {
+      const current = index++;
+      results[current] = await fn(items[current]);
+    }
+  });
+
+  await Promise.all(workers);
+  return results;
+};
+
 export const useAnalyticsOverview = (links: LinkData[]) => {
   const linkUuids = links.map((link) => link.uuid);
 
   const query = useQuery({
     queryKey: ["analytics-overview", linkUuids],
     queryFn: async () => {
-      const responses = await Promise.all(
-        links.map((link) => linksApi.listLinkSessions(link.uuid)),
+      const responses = await mapLimit(links, 5, (link) =>
+        linksApi.listLinkSessions(link.uuid),
       );
       return aggregateSessions(responses.flatMap((response) => response.data));
     },

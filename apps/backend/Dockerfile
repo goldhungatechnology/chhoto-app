@@ -23,15 +23,17 @@ FROM python:3.13-slim as RUNTIME
 
 WORKDIR /app
 
-# Install PostgreSQL runtime library
+# Install PostgreSQL runtime library and curl (used by the healthcheck)
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libpq5 \
+        curl \
     && rm -rf /var/lib/apt/lists/*
 
 
 COPY --from=BUILDER /usr/local/app /app
+COPY --from=BUILDER /packages /packages
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
 
-CMD ["uvicorn","apps.backend.main:app","--host","0.0.0.0","--port","8000"]
+CMD ["uvicorn","src.main:app","--host","0.0.0.0","--port","8000"]

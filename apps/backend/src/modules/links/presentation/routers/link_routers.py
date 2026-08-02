@@ -1,3 +1,4 @@
+import asyncio
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -97,9 +98,11 @@ async def list_link_sessions(
     link_uuid: str,
     request: Request,
     session: AsyncSessionDep,
+    limit: int = 500,
 ):
     """
-    List all sessions (clicks) for a specific link by its UUID.
+    List sessions (clicks) for a specific link by its UUID, newest first,
+    bounded to the most recent ``limit`` sessions.
     """
     async with LinksUOW(session):
         container = get_links_container(session)
@@ -107,24 +110,31 @@ async def list_link_sessions(
         sessions = await usecase.execute(
             link_uuid=link_uuid,
             user_id=request.state.user_id,
+            limit=limit,
         )
         all_session = [
             LinkSessionResponseSchema.model_validate(s).model_dump() for s in sessions
         ]
-        for s in all_session:
-            geo_data = geoip_service.lookup(ip_address=s["ip_address"])
-            if not geo_data:
-                s["country"] = None
-                s["city"] = None
-
-            else:
-                s["country"] = geo_data.country_name
-                s["city"] = geo_data.city
+        await asyncio.to_thread(_enrich_with_geoip, all_session)
 
     return cr.success(
         data=all_session,
         message="Link sessions retrieved successfully",
     )
+
+
+def _enrich_with_geoip(sessions: list[dict]) -> None:
+    """Populate country/city for each session. Runs in a worker thread because
+    the GeoIP reader is a synchronous C-backed lookup that must not block the
+    event loop."""
+    for s in sessions:
+        geo_data = geoip_service.lookup(ip_address=s["ip_address"])
+        if not geo_data:
+            s["country"] = None
+            s["city"] = None
+        else:
+            s["country"] = geo_data.country_name
+            s["city"] = geo_data.city
 
 
 @protected_router.patch(

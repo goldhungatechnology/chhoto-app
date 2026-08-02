@@ -23,8 +23,12 @@ class LinkSessionDomainService:
                 error="Failed to create link session", internal_details=str(e)
             ) from e
 
-    async def list_sessions_by_link_id(self, link_id: int) -> list[LinkSessionEntity]:
+    async def list_sessions_by_link_id(
+        self, link_id: int, limit: int | None = None
+    ) -> list[LinkSessionEntity]:
         try:
+            if limit is not None:
+                return await self.repository.list_recent(link_id=link_id, limit=limit)
             return await self.repository.filter(link_id=link_id)
         except Exception as e:
             raise CreateError(

@@ -14,7 +14,7 @@ import { OAuthProviders } from "../primitives";
 import LoginFormFields from "./login-form-fields";
 
 import { useLoginForm } from "@/modules/auth/hooks";
-import { TURN_STILE_SITE_KEY } from "@/core/config";
+import { TURNSTILE_SITE_KEY } from "@/core/config";
 
 // ----------------------------------------------------------------------
 
@@ -181,7 +181,7 @@ export default function LoginForm() {
 
           <Turnstile
             ref={turnstileRef}
-            siteKey={TURN_STILE_SITE_KEY || ""}
+            siteKey={TURNSTILE_SITE_KEY || ""}
             // options={{ size: "invisible" }}
             onSuccess={onCaptchaSuccess}
             onExpire={onCaptchaExpire}

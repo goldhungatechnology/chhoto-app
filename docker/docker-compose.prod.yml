@@ -59,6 +59,7 @@ services:
       args:
         NEXT_PUBLIC_API_BASE_URL: ${PROD_API_URL}
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${PROD_TURNSTILE_SITE_KEY}
+        NEXT_PUBLIC_REDIRECT_DOMAIN: ${PROD_REDIRECT_DOMAIN}
     environment:
       - NODE_ENV=production
     ports:

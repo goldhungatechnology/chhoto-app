@@ -2,10 +2,10 @@ import { ChangeEvent } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 
-import LinkedinIcon from "../../../../../../public/assets/icons/linkedin";
-import InstagramIcon from "../../../../../../public/assets/icons/instagram";
-import ChatgptIcon from "../../../../../../public/assets/icons/chatgpt";
-import OthersIcon from "../../../../../../public/assets/icons/others";
+import LinkedinIcon from "@/modules/auth/components/icons/linkedin";
+import InstagramIcon from "@/modules/auth/components/icons/instagram";
+import ChatgptIcon from "@/modules/auth/components/icons/chatgpt";
+import OthersIcon from "@/modules/auth/components/icons/others";
 
 interface StepReferralProps {
   referralSource: string;

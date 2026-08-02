@@ -3,9 +3,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTheme } from "next-themes";
 import { useMe, useUpdateInterface } from "@/modules/auth/api/hooks";
+import { useSidebar } from "@/shared/components/ui/sidebar";
 
 export const useNavbar = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
+  const { toggleSidebar } = useSidebar();
   const { data, isLoading } = useMe();
   const [searchQuery, setSearchQuery] = useState("");
   const [isCommandOpen, setIsCommandOpen] = useState(false);
@@ -32,14 +34,6 @@ export const useNavbar = () => {
       updateInterfaceAsync({ theme: nextTheme, language: "en" }).catch(() => {});
     }
   }, [theme, setTheme, data, updateInterfaceAsync]);
-
-  // Sidebar toggle triggering a custom window event
-  const toggleSidebar = useCallback(() => {
-    if (typeof window !== "undefined") {
-      const event = new CustomEvent("toggle-sidebar");
-      window.dispatchEvent(event);
-    }
-  }, []);
 
   return {
     theme: theme,
