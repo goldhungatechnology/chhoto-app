@@ -158,6 +158,50 @@ class BaseRepository[TEntity](IBaseRepository[TEntity]):
         except SQLAlchemyError as e:
             raise CreateError("Failed to create record", str(e)) from e
 
+    async def bulk_create(
+        self, rows: list[dict], *, audit: bool = True
+    ) -> list[TEntity]:
+        """
+        Insert multiple rows in a single statement, returning the created entities.
+        """
+        if not rows:
+            return []
+
+        cleaned = [{k: v for k, v in row.items() if k != "id"} for row in rows]
+        columns = ", ".join(cleaned[0].keys())
+
+        params = {}
+        value_sets = []
+        for i, row in enumerate(cleaned):
+            aliased = {f"{k}_{i}": v for k, v in row.items()}
+            params.update(aliased)
+            value_sets.append(f"({', '.join(f':{k}_{i}' for k in row.keys())})")
+
+        sql = text(
+            f"INSERT INTO {self.table_name} ({columns}) "
+            f"VALUES {', '.join(value_sets)} RETURNING *"
+        )
+
+        try:
+            result = await self.session.execute(sql, params)
+            inserted_rows = [dict(r) for r in result.mappings().all()]
+
+            if audit and not self._is_audit_table():
+                for inserted_row in inserted_rows:
+                    await self._emit_audit_event(
+                        action="create",
+                        entity_id=inserted_row.get("id"),
+                        before_data={},
+                        after_data=inserted_row,
+                    )
+
+            return [self.to_entity(row) for row in inserted_rows]
+
+        except IntegrityError as e:
+            raise ConflictError("Record already exists", str(e)) from e
+        except SQLAlchemyError as e:
+            raise CreateError("Failed to create records", str(e)) from e
+
     # -----------------------------
     # READ
     # -----------------------------

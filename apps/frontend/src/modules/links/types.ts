@@ -59,6 +59,8 @@ export interface LinkSession {
   browser: string | null;
   referral_source: string | null;
   created_at: string;
+  country: string | null;
+  city: string | null;
 }
 
 export interface ListLinkSessionsResponse {

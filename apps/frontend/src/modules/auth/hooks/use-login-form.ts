@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   useForm,
   UseFormReturn,
@@ -71,19 +71,27 @@ export function useLoginForm(): UseLoginFormReturn {
   const { loginAsync } = useLogin();
   const { verifyMfaAsync, isVerifyingMfa } = useVerifyMfa();
 
-  const defaultValues: LoginFormValues = {
-    email: getItem("email") || "",
-    password: getItem("password") || "",
-    captcha_token: "",
-    rememberMe: !!(getItem("email") && getItem("password")),
-  };
-
   const methods = useForm<LoginFormValues>({
     resolver: zodResolver(Schema),
-    defaultValues,
+    defaultValues: {
+      email: "",
+      password: "",
+      captcha_token: "",
+      rememberMe: false,
+    },
   });
 
   const { reset, handleSubmit, setValue, control } = methods;
+
+  useEffect(() => {
+    const email = getItem("email") || "";
+    const password = getItem("password") || "";
+    const rememberMe = !!(email && password);
+
+    if (email || password || rememberMe) {
+      reset({ email, password, captcha_token: "", rememberMe });
+    }
+  }, [getItem, reset]);
 
   const turnstileToken = useWatch({ control, name: "captcha_token" }) || "";
 
@@ -114,15 +122,28 @@ export function useLoginForm(): UseLoginFormReturn {
       toast.success("Logged in successfully!");
     } catch (error) {
       const apiError = error as {
-        errors?: Record<string, string>;
+        errors?: Record<string, unknown>;
         error?: string;
       };
       const errors = apiError?.errors;
-      if (errors) {
+
+      if (
+        errors &&
+        errors.mfa_required === true &&
+        typeof errors.temp_token === "string"
+      ) {
+        setTempToken(errors.temp_token);
+        setMfaRequired(true);
+        if (data.rememberMe) {
+          setItem("email", data.email);
+          setItem("password", data.password);
+        }
+        toast.success("Password verified. Please enter your MFA code.");
+      } else if (errors) {
         Object.entries(errors).forEach(([key, value]) => {
           methods.setError(key as keyof LoginFormValues, {
             type: "manual",
-            message: value,
+            message: String(value),
           });
         });
       } else {

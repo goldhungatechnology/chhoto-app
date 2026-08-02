@@ -59,6 +59,8 @@ class LinkSessionResponseSchema(BaseSchema):
     browser: str | None = None
     referral_source: str | None = None
     created_at: datetime
+    country: str | None = None
+    city: str | None = None
 
     model_config = {"from_attributes": True, "extra": "ignore"}
 

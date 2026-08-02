@@ -12,7 +12,6 @@ import { useLinkSessions } from "../../api/hooks/use-link-sessions";
 import { LinkData } from "../../types";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Monitor, Smartphone, Tablet, Globe } from "lucide-react";
-
 interface LinkSessionsDrawerProps {
   link: LinkData | null;
   isOpen: boolean;
@@ -78,9 +77,10 @@ export function LinkSessionsDrawer({ link, isOpen, onClose }: LinkSessionsDrawer
             </div>
           ) : (
             <div className="w-full overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[700px]">
+              <table className="w-full text-left border-collapse min-w-[820px]">
                 <thead>
                   <tr className="border-b border-border/50 bg-slate-50/50 dark:bg-slate-900/10 text-xs font-bold text-muted-foreground uppercase select-none">
+                    <th className="py-3.5 px-6">Location</th>
                     <th className="py-3.5 px-6">IP Address</th>
                     <th className="py-3.5 px-6">Browser</th>
                     <th className="py-3.5 px-6">Device</th>
@@ -98,9 +98,31 @@ export function LinkSessionsDrawer({ link, isOpen, onClose }: LinkSessionsDrawer
                       minute: "2-digit",
                     });
                     const referrerText = session.referral_source || "Direct / Organic";
+                    const locationText = [session.city, session.country]
+                      .filter(Boolean)
+                      .join(", ");
 
                     return (
                       <tr key={session.uuid} className="hover:bg-slate-50/30 dark:hover:bg-slate-900/10 transition-colors">
+                        {/* Location */}
+                        <td className="py-3.5 px-6">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <div className="flex items-center justify-center size-8 shrink-0 rounded-lg bg-muted/40">
+                              <Globe className="size-4 text-muted-foreground" />
+                            </div>
+                            <div className="flex flex-col leading-tight min-w-0">
+                              <span className="font-medium text-slate-800 dark:text-slate-200 capitalize truncate">
+                                {locationText || "Unknown location"}
+                              </span>
+                              {!locationText && (
+                                <span className="text-[11px] text-muted-foreground">
+                                  Could not be resolved
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+
                         {/* IP Address */}
                         <td className="py-3.5 px-6 font-mono text-xs text-muted-foreground select-all">
                           {session.ip_address || "Unknown"}

@@ -2,6 +2,8 @@ import { useCallback } from "react";
 
 export default function useLocalStorage() {
   const setItem = useCallback((key: string, value: string) => {
+    if (typeof window === "undefined") return;
+
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
@@ -10,6 +12,8 @@ export default function useLocalStorage() {
   }, []);
 
   const getItem = useCallback((key: string) => {
+    if (typeof window === "undefined") return null;
+
     try {
       const value = localStorage.getItem(key);
 
@@ -23,6 +27,8 @@ export default function useLocalStorage() {
   }, []);
 
   const removeItem = useCallback((key: string) => {
+    if (typeof window === "undefined") return;
+
     try {
       localStorage.removeItem(key);
     } catch (error) {
@@ -31,6 +37,8 @@ export default function useLocalStorage() {
   }, []);
 
   const clear = useCallback(() => {
+    if (typeof window === "undefined") return;
+
     try {
       localStorage.clear();
     } catch (error) {

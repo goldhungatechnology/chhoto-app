@@ -25,6 +25,7 @@ from src.modules.links.presentation.schemas.link_schemas import (
 )
 from src.shared.dependencies.access_guard import require_access
 from src.shared.infrastructure.db import get_async_session
+from src.shared.infrastructure.geoip.geoip_service import geoip_service
 
 protected_router = APIRouter(
     dependencies=[
@@ -107,9 +108,21 @@ async def list_link_sessions(
             link_uuid=link_uuid,
             user_id=request.state.user_id,
         )
+        all_session = [
+            LinkSessionResponseSchema.model_validate(s).model_dump() for s in sessions
+        ]
+        for s in all_session:
+            geo_data = geoip_service.lookup(ip_address=s["ip_address"])
+            if not geo_data:
+                s["country"] = None
+                s["city"] = None
+
+            else:
+                s["country"] = geo_data.country_name
+                s["city"] = geo_data.city
 
     return cr.success(
-        data=[LinkSessionResponseSchema.model_validate(s) for s in sessions],
+        data=all_session,
         message="Link sessions retrieved successfully",
     )
 

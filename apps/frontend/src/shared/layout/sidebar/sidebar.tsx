@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { LogOut, Settings } from "lucide-react";
 import { Logo } from "@/shared/components/custom/logo";
 import {
   Sidebar,
@@ -18,8 +18,13 @@ import {
 import { mainNavItems } from "@/data/sidebar/menu-items";
 import { useLogout } from "@/modules/auth/api/hooks";
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  onOpenSettings?: () => void;
+}
+
+export function AppSidebar({ onOpenSettings }: AppSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { logoutAsync } = useLogout();
 
   const handleLogout = async () => {
@@ -28,6 +33,11 @@ export function AppSidebar() {
     } catch {
       // Handled by the hook
     }
+  };
+
+  const handleSettings = () => {
+    router.push("/profile");
+    onOpenSettings?.();
   };
 
   return (
@@ -59,6 +69,15 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t border-sidebar-border/40 p-2">
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={handleSettings}
+              className="w-full cursor-pointer"
+            >
+              <Settings className="h-4 w-4" />
+              <span>Settings</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={handleLogout}

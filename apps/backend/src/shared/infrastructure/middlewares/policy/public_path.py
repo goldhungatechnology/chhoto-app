@@ -11,6 +11,8 @@ AUTH: list[str] = [
     ## Password
     "/api/v1/auth/password/forgot",
     "/api/v1/auth/password/forgot/verify",
+    ## MFA
+    "/api/v1/auth/mfa/verify",
 ]
 
 COUNTRY: list[str] = ["/api/v1/countries"]
