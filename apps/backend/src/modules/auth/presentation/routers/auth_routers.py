@@ -84,7 +84,10 @@ async def signup(request: Request, body: SignupRequestSchema, session: AsyncSess
         auth_container = get_auth_container(session)
         create_user_usecase = auth_container.create_user_usecase()
         payload = await create_user_usecase.execute(
-            payload=body, ip_address=request.state.ip_address
+            payload=body,
+            ip_address=request.state.ip_address,
+            browser=request.state.browser,
+            device=request.state.device,
         )
 
         response = cr.success(

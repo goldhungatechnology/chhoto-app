@@ -15,11 +15,11 @@ from src.modules.auth.domain.services.user_token_domain_service import (
 )
 from src.modules.auth.presentation.schemas.auth_schemas import SignupRequestSchema
 from src.shared.exceptions.base_exceptions import DomainError, InvalidError, ServerError
+from src.shared.infrastructure.captcha import captcha
 from src.shared.infrastructure.country.country_reader import CountryReader
 from src.shared.infrastructure.geoip.geoip_service import GeoIPService
 from src.shared.infrastructure.hasher.hasher import HasherService
 from src.shared.mediator.mediator import mediator
-from src.shared.infrastructure.captcha import captcha
 
 
 class CreateUserUseCase:
@@ -47,7 +47,11 @@ class CreateUserUseCase:
         self.captcha = captcha
 
     async def execute(
-        self, payload: SignupRequestSchema, ip_address: str | None = None
+        self,
+        payload: SignupRequestSchema,
+        ip_address: str | None = None,
+        browser: str | None = None,
+        device: str | None = None,
     ):
         """
         Executes the use case to create a new user.
@@ -82,7 +86,9 @@ class CreateUserUseCase:
                 raise ServerError(error="Failed to create user")
 
             _ = await self._handle_user_account_creation(new_user.id, payload.password)
-            session = await self._handle_user_session_creation(new_user.id)
+            session = await self._handle_user_session_creation(
+                new_user.id, ip_address, browser=browser, device=device
+            )
 
             token = await self.user_token_domain_service.create_user_token(
                 user_id=new_user.id,
@@ -157,13 +163,23 @@ class CreateUserUseCase:
                 internal_details=str(e),
             ) from e
 
-    async def _handle_user_session_creation(self, user_id: int) -> UserSessionEntity:
+    async def _handle_user_session_creation(
+        self,
+        user_id: int,
+        ip_address: str | None = None,
+        device: str | None = None,
+        browser: str | None = None,
+    ) -> UserSessionEntity:
         """
         Handles the creation of a user session for the newly created user.
         """
         try:
             session_entity = UserSessionEntity(
-                user_id=user_id, expires_at=UserSessionEntity.set_expiration()
+                user_id=user_id,
+                expires_at=UserSessionEntity.set_expiration(),
+                ip_address=ip_address,
+                device=device,
+                browser=browser,
             )
             return await self.user_session_domain_service.create_user_session(
                 session_entity
