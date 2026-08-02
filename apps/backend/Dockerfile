@@ -30,9 +30,10 @@ RUN apt-get update \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /usr/local
 
 COPY --from=BUILDER /usr/local/app /app
-COPY --from=BUILDER /usr/local/packages /packages
+COPY --from=BUILDER /usr/local/packages /usr/local/packages
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
 
