@@ -31,6 +31,8 @@ services:
       - ../apps/backend/env/.env.staging
     ports:
       - "8000:8000"
+    volumes:
+      - ${GEOIP_DB_HOST_PATH:-/root/GeoLite2-Country.mmdb}:/data/GeoLite2-Country.mmdb:ro
     depends_on:
       db_staging:
         condition: service_healthy
@@ -51,6 +53,8 @@ services:
     container_name: chhoto_worker_staging
     env_file:
       - ../apps/backend/env/.env.staging
+    volumes:
+      - ${GEOIP_DB_HOST_PATH:-/root/GeoLite2-Country.mmdb}:/data/GeoLite2-Country.mmdb:ro
     depends_on:
       db_staging:
         condition: service_healthy

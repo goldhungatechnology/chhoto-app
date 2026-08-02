@@ -72,20 +72,42 @@ class GeoIPService:
         Resolve an IP address to a GeoLocation. Returns None when geolocation is
         unavailable, the IP is missing/unknown, or the address is not found
         (e.g. private/loopback ranges).
+
+        Supports both GeoLite2-City and GeoLite2-Country databases: when the
+        loaded database is country-only, city lookups fall back to country
+        resolution and ``city`` stays None.
         """
         if self._reader is None or not ip_address or ip_address == "unknown":
             return None
 
-        try:
-            response = self._reader.city(ip_address)
-        except Exception:
-            # AddressNotFoundError, ValueError (malformed IP), etc.
+        city = None
+        country_iso = None
+        country_name = None
+
+        for method in ("city", "country"):
+            try:
+                response = getattr(self._reader, method)(ip_address)
+            except ValueError:
+                # Database type does not support this method
+                # (e.g. calling city() on a country-only database).
+                continue
+            except Exception:
+                # AddressNotFoundError (unknown/private IP), malformed input, etc.
+                return None
+
+            country_iso = response.country.iso_code
+            country_name = response.country.name
+            if method == "city":
+                city = response.city.name
+            break
+
+        if country_iso is None and country_name is None:
             return None
 
         return GeoLocation(
-            country_iso=response.country.iso_code,
-            country_name=response.country.name,
-            city=response.city.name,
+            country_iso=country_iso,
+            country_name=country_name,
+            city=city,
         )
 
 
