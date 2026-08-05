@@ -54,7 +54,7 @@ services:
     env_file:
       - ../apps/backend/env/.env.staging
     volumes:
-      - ${GEOIP_DB_HOST_PATH:-/root/GeoLite2-Country.mmdb}:/data/GeoLite2-Country.mmdb:ro
+      - ${GEOIP_DB_HOST_PATH:-/root/GeoLite2-City.mmdb}:/data/GeoLite2-City.mmdb:ro
     depends_on:
       db_staging:
         condition: service_healthy
